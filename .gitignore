@@ -1,0 +1,43 @@
+# Planning and scratch notes — local only, not part of the shipped project
+planning/
+*.local.md
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+firebase-debug.log*
+.firebase/
+emulator-data/
+firestore-debug.log*
+
+# Editor and OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Raw, unprocessed artwork — scans and phone photos stay off the repo;
+# only the cleaned, resized exports under src/assets get committed
+art-raw/
+
+# Python virtualenv used for asset tooling (font conversion, image optimisation)
+.venv/
