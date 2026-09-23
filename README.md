@@ -1,4 +1,4 @@
-# Meet the Gang
+# FriendSlop
 
 A private scrapbook site where a friend group records their favourite things, so
 buying gifts and planning for each other doesn't mean asking. Pick your name, fill
@@ -20,9 +20,6 @@ npm run rules:deploy # publish firestore.rules
 Copy `.env.example` to `.env.local` and fill in the Firebase web config. Set
 `VITE_USE_EMULATORS=true` to work against the local emulators instead of the real
 project — a green badge appears when you are.
-
-Two files are kept out of the repository because they name real people:
-`src/config/roster.ts` and `src/config/admin.ts`.
 
 Seed the roster once from `/admin`, which also holds PIN resets, JSON backups and
 the danger zone.

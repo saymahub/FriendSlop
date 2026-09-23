@@ -14,7 +14,7 @@ export function Landing() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-16 text-center">
       <HandLabel as="h1" size="hero" face="title" glow className="block">
-        Meet the Gang
+        FriendSlop
       </HandLabel>
 
       <p className="mx-auto mt-4 max-w-md text-ink-soft">

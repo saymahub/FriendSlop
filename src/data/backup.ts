@@ -147,7 +147,7 @@ export function downloadBackup(backup: Backup): void {
 
   const link = document.createElement('a');
   link.href = url;
-  link.download = `meet-the-gang-${stamp}.json`;
+  link.download = `friendslop-${stamp}.json`;
   link.click();
 
   URL.revokeObjectURL(url);

@@ -21,7 +21,7 @@ export function StyleGuide() {
     <main style={swatchVariables(theme)} className="mx-auto max-w-4xl px-4 py-10">
       <header className="mb-10 text-center">
         <HandLabel as="h1" size="hero" face="title" className="block">
-          Meet the Gang
+          FriendSlop
         </HandLabel>
         <p className="mt-2 text-sm text-faded">
           Step 1 review: theme tokens, 24 swatches, nine primitives, {questions.length} questions.

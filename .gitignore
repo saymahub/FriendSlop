@@ -17,7 +17,9 @@ dist-ssr/
 firebase-debug.log*
 .firebase/
 emulator-data/
+firebase-export-*/
 firestore-debug.log*
+ui-debug.log*
 
 # Editor and OS
 .vscode/*
