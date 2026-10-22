@@ -27,6 +27,23 @@ export const stickers = {
   flower: placeholder('<circle cx="12" cy="12" r="2.4"/><path d="M12 4a3 3 0 010 5M12 20a3 3 0 010-5M4 12a3 3 0 015 0M20 12a3 3 0 01-5 0"/>'),
 } as const;
 
+/**
+ * Full-colour cutouts, drawn as they are rather than recoloured like a sticker
+ * mask. A WebP's file name is its id, so renaming a file orphans anyone who
+ * picked it. Dropping a picture into `smiskis/` or `sanrio/` is all it takes to
+ * offer it; a flower also needs an entry in `config/flowers.ts` for its name.
+ */
+const byFileName = (files: Record<string, string>): Readonly<Record<string, string>> =>
+  Object.fromEntries(
+    Object.entries(files).map(([path, url]) => [path.slice(path.lastIndexOf('/') + 1, -'.webp'.length), url]),
+  );
+
+export const smiskis = byFileName(import.meta.glob<string>('./smiskis/*.webp', { eager: true, import: 'default' }));
+export const sanrio = byFileName(import.meta.glob<string>('./sanrio/*.webp', { eager: true, import: 'default' }));
+export const flowerArt = byFileName(import.meta.glob<string>('./flowers/*.webp', { eager: true, import: 'default' }));
+
+export const cutouts = { smiski: smiskis, sanrio, flower: flowerArt } as const;
+
 export const textures = {
   paper: 'var(--texture-paper)',
 } as const;
@@ -34,3 +51,4 @@ export const textures = {
 export type StickerName = keyof typeof stickers;
 export type LogoName = keyof typeof logos;
 export type TextureName = keyof typeof textures;
+export type CutoutSet = keyof typeof cutouts;

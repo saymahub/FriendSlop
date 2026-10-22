@@ -8,6 +8,7 @@ import type { BlockProps } from '../blockTypes';
  */
 export function BuyMeBoard({ profile }: BlockProps) {
   const { answers } = profile;
+  const burritoSkips = labelledAnswers(answers, 'burritoSkips');
 
   const yes = [
     ...labelledAnswers(answers, 'snacks'),
@@ -18,6 +19,7 @@ export function BuyMeBoard({ profile }: BlockProps) {
 
   const no = [
     textAnswer(answers, 'foodsHated'),
+    burritoSkips.length > 0 ? `In a burrito: ${burritoSkips.join(', ')}` : '',
     ...labelledAnswers(answers, 'scentsHated'),
     ...chosenSwatches(answers, 'coloursHated').map((swatch) => `${swatch.name} (colour)`),
   ].filter(Boolean);

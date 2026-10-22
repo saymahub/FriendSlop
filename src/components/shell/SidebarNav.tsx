@@ -18,7 +18,7 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
       <Link to="/landing" onClick={onNavigate} className="flex items-center gap-2">
         <img src={logos.bro} alt="" aria-hidden="true" className="h-8 w-9 shrink-0 object-contain" />
         <HandLabel as="span" size="lg" face="title">
-          MTG
+          friendslop
         </HandLabel>
       </Link>
 

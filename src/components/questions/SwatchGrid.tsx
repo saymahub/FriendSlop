@@ -1,11 +1,12 @@
-import { Sticker } from '@/components/primitives';
+import { flowerArt } from '@/assets/registry';
 import { flowers } from '@/config/flowers';
 import { swatches, swatchIds } from '@/config/swatches';
 import { asSelection, toggleCapped } from '@/lib/selection';
 import type { SwatchQuestion } from '@/config/questionTypes';
 import type { QuestionProps } from './types';
 
-type Tile = { id: string; name: string; fill: string; ink: string };
+/** `art` replaces the flat fill with a picture. */
+type Tile = { id: string; name: string; fill: string; ink: string; art?: string };
 
 /**
  * One grid, three jobs: numbered favourites, crossed-out dislikes, and flowers
@@ -44,7 +45,6 @@ type SwatchTileProps = {
 
 function SwatchTile({ tile, variant, rank, onSelect }: SwatchTileProps) {
   const isSelected = rank > 0;
-  const isFlower = variant === 'flower';
 
   return (
     <button
@@ -57,10 +57,10 @@ function SwatchTile({ tile, variant, rank, onSelect }: SwatchTileProps) {
       }`}
     >
       <span
-        style={{ backgroundColor: isFlower ? 'var(--color-paper-deep)' : tile.fill, color: tile.ink }}
-        className="relative flex h-14 items-center justify-center"
+        style={{ backgroundColor: tile.fill, color: tile.ink }}
+        className={`relative flex items-center justify-center ${tile.art ? 'h-20 p-1' : 'h-14'}`}
       >
-        {isFlower && <Sticker name="flower" size={34} tint={tile.fill} />}
+        {tile.art && <img src={tile.art} alt="" className="h-full w-full object-contain" />}
         {isSelected && variant !== 'hate' && (
           <span className="absolute top-1 right-1 text-xs font-bold tabular-nums">{rank}</span>
         )}
@@ -79,7 +79,8 @@ function flowerTiles(): Tile[] {
   return flowers.map((flower) => ({
     id: flower.id,
     name: flower.name,
-    fill: swatches[flower.tint].base,
-    ink: swatches[flower.tint].ink,
+    fill: 'var(--color-paper-deep)',
+    ink: 'var(--color-ink)',
+    art: flowerArt[flower.id],
   }));
 }

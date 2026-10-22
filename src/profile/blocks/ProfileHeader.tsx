@@ -1,5 +1,5 @@
-import { HandLabel, Stamp } from '@/components/primitives';
-import { chosenSwatches, textAnswer } from '@/lib/answerDisplay';
+import { HandLabel, Stamp, Sticker } from '@/components/primitives';
+import { chosenCutout, chosenSwatches, cutoutLabel, textAnswer } from '@/lib/answerDisplay';
 import { identityOf } from '@/lib/profileData';
 import type { BlockProps } from '../blockTypes';
 
@@ -8,9 +8,31 @@ export function ProfileHeader({ profile }: BlockProps) {
   const { name, emoji } = identityOf(profile.person);
   const tagline = textAnswer(answers, 'oneSentence');
   const colours = chosenSwatches(answers, 'coloursLoved');
+  const smiski = chosenCutout(answers, 'smiski', 'smiski');
+  const sanrio = chosenCutout(answers, 'sanrio', 'sanrio');
 
   return (
-    <header className="flex flex-col items-center text-center">
+    <header className="relative flex flex-col items-center text-center">
+      {smiski && (
+        <Sticker
+          set="smiski"
+          name={smiski}
+          label={`Smiski: ${cutoutLabel(smiski)}`}
+          size={112}
+          className="absolute right-0 -bottom-0 z-10 sm:-right-4 sm:size-40"
+        />
+      )}
+      {sanrio && (
+        <Sticker
+          set="sanrio"
+          name={sanrio}
+          label={`Favourite Sanrio character: ${cutoutLabel(sanrio)}`}
+          size={112}
+          lean="left"
+          className="absolute left-0 -bottom-0 z-10 sm:-left-4 sm:size-40"
+        />
+      )}
+
       <span aria-hidden="true" className="text-4xl">
         {emoji}
       </span>

@@ -1,23 +1,20 @@
-import type { SwatchId } from './swatches';
-
 /**
  * The flower picker reuses the swatch grid, but flowers are not colours, so they
- * need their own list. `tint` colours the placeholder drawing until real
- * hand-drawn art replaces it in the asset registry.
+ * need their own list. Each id matches a picture in `assets/flowers/`.
  */
-export type Flower = { readonly id: string; readonly name: string; readonly tint: SwatchId };
+export type Flower = { readonly id: string; readonly name: string };
 
 export const flowers: readonly Flower[] = [
-  { id: 'rose', name: 'Rose', tint: 'rose' },
-  { id: 'peony', name: 'Peony', tint: 'blush' },
-  { id: 'tulip', name: 'Tulip', tint: 'clay' },
-  { id: 'sunflower', name: 'Sunflower', tint: 'marigold' },
-  { id: 'daisy', name: 'Daisy', tint: 'butter' },
-  { id: 'lavender', name: 'Lavender', tint: 'lilac' },
-  { id: 'hydrangea', name: 'Hydrangea', tint: 'cornflower' },
-  { id: 'orchid', name: 'Orchid', tint: 'orchid' },
-  { id: 'lily', name: 'Lily', tint: 'cream' },
-  { id: 'carnation', name: 'Carnation', tint: 'wine' },
-  { id: 'freesia', name: 'Freesia', tint: 'apricot' },
-  { id: 'eucalyptus', name: 'Eucalyptus', tint: 'sage' },
+  { id: 'rose', name: 'Rose' },
+  { id: 'tulip', name: 'Tulip' },
+  { id: 'sunflower', name: 'Sunflower' },
+  { id: 'daisy', name: 'Daisy' },
+  { id: 'lavender', name: 'Lavender' },
+  { id: 'hydrangea', name: 'Hydrangea' },
+  { id: 'orchid', name: 'Orchid' },
+  { id: 'lily', name: 'Lily' },
+  { id: 'cherryblossom', name: 'Cherry blossom' },
+  { id: 'dahlia', name: 'Dahlia' },
+  { id: 'anemone', name: 'Anemone' },
+  { id: 'iris', name: 'Iris' },
 ];

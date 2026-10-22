@@ -149,7 +149,7 @@ function PinStep({ person, onBack }: PinStepProps) {
 
       {!isNew && (
         <p className="mt-6 text-xs text-faded">
-          Forgotten it? Ask the admin to reset your PIN, then set a new one.
+          Forgotten it? YOU IDIOT! Ask the admin to reset your PIN, then you can set a new one.
         </p>
       )}
     </div>

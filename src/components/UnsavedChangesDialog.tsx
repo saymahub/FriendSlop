@@ -43,8 +43,10 @@ export function UnsavedChangesDialog({ onSave, onDiscard, onCancel }: UnsavedCha
         </p>
 
         <div className="flex flex-col gap-2">
-          <Button onClick={onSave}>Save and carry on</Button>
-          <Button variant="quiet" onClick={onDiscard}>
+          <Button variant="keep" onClick={onSave}>
+            Save and carry on
+          </Button>
+          <Button variant="avoid" onClick={onDiscard}>
             Discard changes
           </Button>
           <button

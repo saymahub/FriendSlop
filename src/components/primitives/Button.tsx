@@ -1,12 +1,14 @@
 import type { ButtonHTMLAttributes } from 'react';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'quiet';
+  variant?: 'primary' | 'quiet' | 'keep' | 'avoid';
 };
 
 const VARIANTS = {
   primary: 'border-ink bg-[var(--person-base)] text-[var(--person-ink)] shadow-lift',
   quiet: 'border-paper-edge bg-paper text-ink-soft hover:border-faded',
+  keep: 'border-keep-ink bg-keep text-keep-ink shadow-lift',
+  avoid: 'border-avoid-ink bg-avoid text-avoid-ink shadow-lift',
 } as const;
 
 export function Button({ variant = 'primary', className = '', type = 'button', ...rest }: ButtonProps) {

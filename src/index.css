@@ -81,12 +81,17 @@
   --shadow-lift: 0 2px 5px rgb(47 42 36 / 0.1), 0 8px 18px rgb(47 42 36 / 0.07);
   --shadow-press: inset 0 2px 4px rgb(47 42 36 / 0.14);
 
+  /* The white vinyl border a die-cut sticker has around its shape. */
+  --color-sticker-edge: #ffffff;
+
   /* Deterministic tilts. A card picks one by index so it never reshuffles on
      re-render, which would make the whole page twitch. */
   --rotate-tilt-1: -1.4deg;
   --rotate-tilt-2: 0.9deg;
   --rotate-tilt-3: -0.6deg;
   --rotate-tilt-4: 1.7deg;
+  /* A sticker slapped on by hand sits well off square, unlike a card. */
+  --rotate-sticker: 9deg;
 }
 
 /*
@@ -146,6 +151,15 @@
       0 0 0.05em var(--color-paper),
       0 0 0.35em var(--person-base),
       0 0 0.9em var(--person-base);
+  }
+
+  /* Traces a white border around the art's own outline rather than its box, so a
+     transparent cutout reads as a die-cut sticker. Four hard shadows make the
+     border; the last one lifts it off the page. */
+  .die-cut {
+    filter: drop-shadow(1.5px 0 0 var(--color-sticker-edge)) drop-shadow(-1.5px 0 0 var(--color-sticker-edge))
+      drop-shadow(0 1.5px 0 var(--color-sticker-edge)) drop-shadow(0 -1.5px 0 var(--color-sticker-edge))
+      drop-shadow(0 2px 3px rgb(47 42 36 / 0.25));
   }
 
   /* Dark ink photographed on white paper: multiply drops the white away without

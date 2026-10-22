@@ -1,6 +1,7 @@
+import type { CutoutSet } from '@/assets/registry';
 import type { SwatchId } from './swatches';
 
-export type QuestionType = 'text' | 'single' | 'multi' | 'slider' | 'swatch' | 'song' | 'date';
+export type QuestionType = 'text' | 'single' | 'multi' | 'slider' | 'swatch' | 'song' | 'date' | 'cutout';
 
 export type SectionId = 'basics' | 'food' | 'colour' | 'media' | 'hangouts' | 'gifting';
 
@@ -64,6 +65,8 @@ export type SwatchQuestion = BaseQuestion & {
 
 export type SongQuestion = BaseQuestion & { readonly type: 'song' };
 export type DateQuestion = BaseQuestion & { readonly type: 'date' };
+/** Pick one picture from a set in the asset registry; stores its file name. */
+export type CutoutQuestion = BaseQuestion & { readonly type: 'cutout'; readonly set: CutoutSet };
 
 export type Question =
   | TextQuestion
@@ -72,7 +75,8 @@ export type Question =
   | SliderQuestion
   | SwatchQuestion
   | SongQuestion
-  | DateQuestion;
+  | DateQuestion
+  | CutoutQuestion;
 
 /** A slider stores 0-100; a swatch question stores swatch ids in pick order. */
 export type AnswerValue = string | string[] | number | SwatchId[] | SongAnswer | null;

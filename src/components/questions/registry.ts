@@ -3,6 +3,7 @@ import type { QuestionType } from '@/config/questionTypes';
 import type { QuestionProps } from './types';
 import { ChipMultiSelect } from './ChipMultiSelect';
 import { ChipSelect } from './ChipSelect';
+import { CutoutPicker } from './CutoutPicker';
 import { DatePad } from './DatePad';
 import { ScrapNote } from './ScrapNote';
 import { SongSearch } from './SongSearch';
@@ -21,4 +22,5 @@ export const renderers: Record<QuestionType, FC<QuestionProps>> = {
   swatch: SwatchGrid as FC<QuestionProps>,
   song: SongSearch as FC<QuestionProps>,
   date: DatePad as FC<QuestionProps>,
+  cutout: CutoutPicker as FC<QuestionProps>,
 };

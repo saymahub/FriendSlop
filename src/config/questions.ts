@@ -2,11 +2,6 @@ import type { Question, Section, SectionId } from './questionTypes';
 
 /**
  * Every question in the form, in the order people answer them.
- *
- * Sections run fast-and-fun first and land on gifting last, because the gifting
- * questions are the ones people stall on. Answers are stored as a flat map keyed
- * by question id, so adding, removing or reordering anything here never needs a
- * data migration.
  */
 
 export const sections: readonly Section[] = [
@@ -56,7 +51,7 @@ export const questions: readonly Question[] = [
     section: 'basics',
     type: 'text',
     label: 'Describe yourself in one sentence',
-    placeholder: 'Chronically early, still somehow unprepared.',
+    placeholder: 'I am a small person with a big heart <3',
   },
 
   // Food and drink
@@ -65,7 +60,7 @@ export const questions: readonly Question[] = [
     section: 'food',
     type: 'multi',
     label: 'Allergies and dietary needs',
-    help: 'This one stays visible to everyone, including guests. It is safety information.',
+    help: 'This one stays visible to everyone, including guests.',
     allowOther: true,
     options: [
       { value: 'none', label: 'None' },
@@ -91,15 +86,29 @@ export const questions: readonly Question[] = [
     section: 'food',
     type: 'text',
     label: 'Foods you hate. Never buy me this.',
-    placeholder: 'Black liquorice, and anything with raisins pretending to be chocolate.',
+    placeholder: 'Black liquorice, and anything with raisins.',
     multiline: true,
+  },
+  {
+    id: 'burritoSkips',
+    section: 'food',
+    type: 'multi',
+    label: 'What should I not put in your burrito?',
+    isOptional: true,
+    allowOther: true,
+    options: [
+      { value: 'beans', label: 'Beans' },
+      { value: 'tomato', label: 'Tomato' },
+      { value: 'lettuce', label: 'Lettuce' },
+      { value: 'peppers', label: 'Peppers' },
+    ],
   },
   {
     id: 'comfortMeal',
     section: 'food',
     type: 'text',
     label: 'Comfort meal',
-    placeholder: 'Ammu’s pulaso and airfry chicken',
+    placeholder: 'Ammu’s pulao and airfry chicken',
   },
   {
     id: 'cuisine',
@@ -114,7 +123,7 @@ export const questions: readonly Question[] = [
       { value: 'thai', label: 'Thai' },
       { value: 'indian', label: 'Indian' },
       { value: 'mexican', label: 'Mexican' },
-      { value: 'greek', label: 'Greek' },
+      { value: 'pakistani', label: 'Pakistani' },
       { value: 'lebanese', label: 'Lebanese' },
       { value: 'ethiopian', label: 'Ethiopian' },
       { value: 'caribbean', label: 'Caribbean' },
@@ -136,7 +145,7 @@ export const questions: readonly Question[] = [
       { value: 'iceCream', label: 'Ice cream' },
       { value: 'cheese', label: 'Cheese and crackers' },
       { value: 'fruit', label: 'Fresh fruit' },
-      { value: 'driedMango', label: 'Dried mango' },
+      { value: 'cookies', label: 'Cookies' },
       { value: 'nuts', label: 'Salted nuts' },
       { value: 'pastries', label: 'Pastries' },
       { value: 'instantNoodles', label: 'Instant noodles' },
@@ -148,7 +157,7 @@ export const questions: readonly Question[] = [
     section: 'food',
     type: 'text',
     label: 'Go-to cafe order',
-    placeholder: 'London Fog with 2 tea bags, and a croissant if nobody is watching.',
+    placeholder: 'London Fog with 2 tea bags, and a croissant :)',
   },
   {
     id: 'spiceTolerance',
@@ -230,6 +239,59 @@ export const questions: readonly Question[] = [
       { value: 'earthy', label: 'Earthy and natural' },
       { value: 'sleek', label: 'Sleek and modern' },
     ],
+  },
+  {
+    id: 'hobbies',
+    section: 'colour',
+    type: 'multi',
+    label: 'Your top hobbies',
+    max: 5,
+    allowOther: true,
+    options: [
+      { value: 'painting', label: 'Painting' },
+      { value: 'drawing', label: 'Drawing' },
+      { value: 'sculpting', label: 'Sculpting' },
+      { value: 'cars', label: 'Cars' },
+      { value: 'music', label: 'Music' },
+      { value: 'cubing', label: 'Cubing' },
+      { value: 'boardGames', label: 'Board games' },
+      { value: 'lego', label: 'Lego' },
+      { value: 'cooking', label: 'Cooking' },
+      { value: 'baking', label: 'Baking' },
+      { value: 'cycling', label: 'Cycling' },
+      { value: 'sports', label: 'Sports' },
+      { value: 'workingOut', label: 'Working out' },
+      { value: 'chess', label: 'Chess' },
+      { value: 'crochet', label: 'Crochet' },
+      { value: 'knitting', label: 'Knitting' },
+      { value: 'sewing', label: 'Sewing' },
+      { value: 'dancing', label: 'Dancing' },
+      { value: 'movies', label: 'Movies' },
+      { value: 'books', label: 'Books' },
+      { value: 'puzzles', label: 'Puzzles' },
+      { value: 'videoGames', label: 'Video games' },
+      { value: 'shortFormContent', label: 'Short-form content' },
+      { value: 'longFormContent', label: 'Long-form content' },
+      { value: 'gardening', label: 'Gardening' },
+      { value: 'programming', label: 'Programming' },
+      { value: 'hiking', label: 'Hiking' },
+    ],
+  },
+  {
+    id: 'smiski',
+    section: 'colour',
+    type: 'cutout',
+    set: 'smiski',
+    label: 'A Smiski that represents you',
+    isOptional: true,
+  },
+  {
+    id: 'sanrio',
+    section: 'colour',
+    type: 'cutout',
+    set: 'sanrio',
+    label: 'Favourite Sanrio character',
+    isOptional: true,
   },
   {
     id: 'roomVibe',
@@ -319,7 +381,14 @@ export const questions: readonly Question[] = [
     section: 'media',
     type: 'text',
     label: 'Favourite character',
-    placeholder: 'Moss from The IT Crowd',
+    placeholder: 'Starfire from TeenTitans',
+  },
+  {
+    id: 'animal',
+    section: 'media',
+    type: 'text',
+    label: 'Favourite animal',
+    placeholder: 'Capybara',
   },
   {
     id: 'movie',
@@ -333,7 +402,7 @@ export const questions: readonly Question[] = [
     section: 'media',
     type: 'text',
     label: 'Favourite book',
-    placeholder: 'Piranesi',
+    placeholder: 'The Alchemist',
   },
   {
     id: 'game',
@@ -347,7 +416,7 @@ export const questions: readonly Question[] = [
     section: 'media',
     type: 'text',
     label: 'Favourite artist or band',
-    placeholder: 'Little Simz',
+    placeholder: 'The 1975',
   },
   {
     id: 'collects',
@@ -419,7 +488,14 @@ export const questions: readonly Question[] = [
     section: 'hangouts',
     type: 'text',
     label: 'Restaurant you would always say yes to',
-    placeholder: 'The dumpling place with the queue round the corner.',
+    placeholder: 'Olive Garden',
+  },
+  {
+    id: 'nextCountry',
+    section: 'hangouts',
+    type: 'text',
+    label: 'What country do you want to travel to next?',
+    placeholder: 'Japan',
   },
   {
     id: 'hardNoActivities',
@@ -491,7 +567,7 @@ export const questions: readonly Question[] = [
     section: 'gifting',
     type: 'text',
     label: 'Shoe size',
-    placeholder: 'UK 7, but 7.5 in trainers',
+    placeholder: 'US 7, but 7.5 in boots',
     isPrivate: true,
   },
   {
@@ -499,7 +575,7 @@ export const questions: readonly Question[] = [
     section: 'gifting',
     type: 'text',
     label: 'Ring size',
-    placeholder: 'M on my right hand, no idea on the left',
+    placeholder: '6 on my middle finger',
     isPrivate: true,
   },
   {
@@ -528,6 +604,15 @@ export const questions: readonly Question[] = [
     type: 'text',
     label: 'A hobby you would happily take gifts for',
     placeholder: 'Baking. I will take any tin, any size.',
+    isPrivate: true,
+  },
+  {
+    id: 'dontBuyMe',
+    section: 'gifting',
+    type: 'text',
+    label: 'Please don’t buy me this',
+    placeholder: 'More mugs. I have forty.',
+    multiline: true,
     isPrivate: true,
   },
 ];

@@ -43,3 +43,6 @@ art-raw/
 
 # Python virtualenv used for asset tooling (font conversion, image optimisation)
 .venv/
+
+# Real names for seeding the roster, mapped by anonymous id
+src/config/names.local.json

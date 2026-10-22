@@ -20,6 +20,7 @@ export function ColourStrip({ profile }: BlockProps) {
       <SwatchRow label="Never" swatches={hated} />
 
       <ChipRow label="Aesthetic" values={aesthetic} />
+      <ChipRow label="Hobbies" values={labelledAnswers(answers, 'hobbies')} />
       <ChipRow label="Flowers" values={blooms} />
       <ChipRow label="Scents" values={scents} />
     </PaperCard>

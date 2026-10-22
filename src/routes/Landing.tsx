@@ -18,7 +18,7 @@ export function Landing() {
       </HandLabel>
 
       <p className="mx-auto mt-4 max-w-md text-ink-soft">
-        Everyone&rsquo;s favourite things, in one place, so nobody has to ask what to get you.
+        You are my friends. (❁´◡`❁)
       </p>
 
       <TornDivider className="my-8" />

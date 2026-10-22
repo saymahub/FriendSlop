@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { roster } from '@/config/roster';
+import { loadRosterNames } from '@/config/rosterNames';
 import type { SwatchId } from '@/config/swatches';
 import type { Answers } from '@/state/useAnswers';
 import { mergeAnswers, splitAnswers } from './answerSplit';
@@ -74,6 +75,25 @@ export async function fetchAnswers(personId: string): Promise<Answers> {
   return mergeAnswers(person?.answers ?? {}, privateAnswers);
 }
 
+/** Someone who has handed their page in, with both halves of their answers. */
+export type GroupMember = { person: PersonDoc; answers: Answers };
+
+/**
+ * Everyone who has submitted, private answers included. Only the group and the
+ * admin may read those, so this is for vault screens; a guest would get the
+ * public half only.
+ */
+export async function fetchSubmittedGroup(): Promise<GroupMember[]> {
+  const submitted = (await fetchPeople()).filter((person) => person.submittedAt !== null);
+
+  return Promise.all(
+    submitted.map(async (person) => ({
+      person,
+      answers: mergeAnswers(person.answers, await fetchPrivateAnswers(person.id)),
+    })),
+  );
+}
+
 /** Writes both halves of someone's answers, and stamps the submission. */
 export async function saveAnswers(personId: string, answers: Answers, submitting: boolean): Promise<void> {
   const { publicAnswers, privateAnswers } = splitAnswers(answers);
@@ -93,6 +113,7 @@ export function claimPerson(personId: string, uid: string): Promise<void> {
 
 /** Admin only, per the rules: creates any roster entry that does not exist yet. */
 export async function seedRoster(): Promise<number> {
+  const names = await loadRosterNames();
   const existing = await getDocs(collection(db, PEOPLE));
   const known = new Set(existing.docs.map((entry) => entry.id));
   const missing = roster.filter((person) => !known.has(person.id));
@@ -100,7 +121,7 @@ export async function seedRoster(): Promise<number> {
   await Promise.all(
     missing.map((person, index) =>
       setDoc(doc(db, PEOPLE, person.id), {
-        name: person.name,
+        name: names[person.id],
         colour: person.colour,
         emoji: person.emoji,
         order: known.size + index,

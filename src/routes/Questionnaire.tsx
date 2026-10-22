@@ -181,7 +181,7 @@ function SubmitPanel({ answers, submitted, saving, onSubmit, onSave }: SubmitPan
           Everyone else&rsquo;s pages are open to you now. Edit anything here, then save again.
         </p>
         <div className="flex flex-wrap justify-center gap-2">
-          <Button variant="quiet" onClick={onSave} disabled={saving}>
+          <Button variant="keep" onClick={onSave} disabled={saving}>
             {saving ? 'Saving…' : 'Save changes'}
           </Button>
           <Button variant="quiet" onClick={() => navigate('/stats')}>

@@ -1,0 +1,113 @@
+rules_version = '2';
+
+// The security boundary for this project. Anything the React app does about
+// privacy is presentation; this file is what actually enforces it.
+//
+// Two things it guarantees:
+//   1. Private gifting answers live in their own document, so a guest who reads
+//      people/{id} cannot see them however the client is written.
+//   2. Only the person who claimed a name, or the admin, can write to it.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && (request.auth.uid == 'dr1jtAR1iJVrWmPU4xkMvCodGQK2'
+            || request.auth.token.email == 'saymadevelops@gmail.com');
+    }
+
+    function claimPath() {
+      return /databases/$(database)/documents/claims/$(request.auth.uid);
+    }
+
+    function hasClaim() {
+      return isSignedIn() && exists(claimPath());
+    }
+
+    // Queries are not allowed in rules, so the claim lives at a path derived
+    // from the uid and can be read with a direct get().
+    function claimData() {
+      return get(claimPath()).data;
+    }
+
+    function hasSubmitted() {
+      return hasClaim() && claimData().submitted == true;
+    }
+
+    function ownsPerson(id) {
+      return hasClaim() && claimData().personId == id;
+    }
+
+    function unclaimed() {
+      return !('claimedBy' in resource.data) || resource.data.claimedBy == null;
+    }
+
+    // A claimVersion bump is the admin's PIN reset, so nobody else may change it.
+    function keepsVersion() {
+      return request.resource.data.claimVersion == resource.data.claimVersion;
+    }
+
+    // An existing owner editing their own answers, without handing the card on.
+    function isOwnEdit() {
+      return isSignedIn()
+        && resource.data.claimedBy == request.auth.uid
+        && request.resource.data.claimedBy == request.auth.uid
+        && keepsVersion();
+    }
+
+    match /people/{personId} {
+      // The account behind a PIN is named after the card and its claim version.
+      // Requiring the caller's own address to match means a session left over
+      // from before a PIN reset cannot re-take the card: its address still
+      // carries the old version.
+      function expectedEmail(id) {
+        return id + '.' + string(resource.data.claimVersion) + '@meetthegang.invalid';
+      }
+
+      // An unclaimed card may be taken, but only by the account named for it.
+      function isFirstClaim(id) {
+        return isSignedIn()
+          && unclaimed()
+          && request.resource.data.claimedBy == request.auth.uid
+          && request.auth.token.email == expectedEmail(id)
+          && keepsVersion();
+      }
+
+      // Public answers are readable by everyone, guests included. The allergy
+      // list lives here deliberately: it is safety information.
+      allow read: if true;
+
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || isOwnEdit() || isFirstClaim(personId);
+
+      // Sizes, birthday and the rest of the gifting section. Never served to a
+      // guest, because a guest is never signed in.
+      match /private/data {
+        allow read: if hasSubmitted() || isAdmin();
+        allow write: if ownsPerson(personId) || isAdmin();
+      }
+    }
+
+    // The reverse index the rules above read. One per signed-in person.
+    match /claims/{uid} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow create, update: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow delete: if isAdmin();
+    }
+
+    match /settings/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Anything not named above stays denied.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

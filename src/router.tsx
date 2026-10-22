@@ -3,7 +3,7 @@ import { AppShell } from './components/shell/AppShell';
 import { DevReset } from './components/shell/DevReset';
 import { EmulatorBadge } from './components/shell/EmulatorBadge';
 import { Admin } from './routes/Admin';
-import { ComingSoon } from './routes/ComingSoon';
+import { GroupStats } from './routes/GroupStats';
 import { Landing } from './routes/Landing';
 import { MyProfile } from './routes/MyProfile';
 import { NamePicker } from './routes/NamePicker';
@@ -37,7 +37,7 @@ export const router = createBrowserRouter([
             path: '/stats',
             element: (
               <RequireVault>
-                <ComingSoon title="Group stats" note="Charts, twin scores and unicorn answers, in step 4." />
+                <GroupStats />
               </RequireVault>
             ),
           },
