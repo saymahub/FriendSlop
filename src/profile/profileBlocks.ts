@@ -2,6 +2,7 @@ import { AllergyTape } from './blocks/AllergyTape';
 import { BuyMeBoard } from './blocks/BuyMeBoard';
 import { ColourStrip } from './blocks/ColourStrip';
 import { EnvelopePocket } from './blocks/EnvelopePocket';
+import { HangoutNotes } from './blocks/HangoutNotes';
 import { Meters } from './blocks/Meters';
 import { PolaroidWall } from './blocks/PolaroidWall';
 import { ProfileHeader } from './blocks/ProfileHeader';
@@ -22,5 +23,6 @@ export const profileBlocks: readonly ProfileBlock[] = [
   { id: 'wall', Component: PolaroidWall },
   { id: 'buyMe', Component: BuyMeBoard },
   { id: 'meters', Component: Meters },
+  { id: 'hangouts', Component: HangoutNotes },
   { id: 'envelope', Component: EnvelopePocket, privateOnly: true },
 ];

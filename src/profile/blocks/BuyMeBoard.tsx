@@ -15,6 +15,8 @@ export function BuyMeBoard({ profile }: BlockProps) {
     ...labelledAnswers(answers, 'collects'),
     textAnswer(answers, 'cafeOrder'),
     textAnswer(answers, 'comfortMeal'),
+    ...labelledAnswers(answers, 'cuisine').map((cuisine) => `Cuisine: ${cuisine}`),
+    ...labelledAnswers(answers, 'cakeFlavour').map((flavour) => `Cake: ${flavour}`),
   ].filter(Boolean);
 
   const no = [

@@ -1,6 +1,7 @@
-import { Chip, PaperCard } from '@/components/primitives';
+import { PaperCard } from '@/components/primitives';
 import { DISPLAY_CHIP } from '@/components/primitives/Chip';
 import { BlockHeading } from '../BlockHeading';
+import { ChipRow } from '../ChipRow';
 import { chosenFlowerNames, chosenSwatches, labelledAnswers } from '@/lib/answerDisplay';
 import type { BlockProps } from '../blockTypes';
 
@@ -21,6 +22,8 @@ export function ColourStrip({ profile }: BlockProps) {
 
       <ChipRow label="Aesthetic" values={aesthetic} />
       <ChipRow label="Hobbies" values={labelledAnswers(answers, 'hobbies')} />
+      <ChipRow label="Room" values={labelledAnswers(answers, 'roomVibe')} />
+      <ChipRow label="Metal" values={labelledAnswers(answers, 'metal')} />
       <ChipRow label="Flowers" values={blooms} />
       <ChipRow label="Scents" values={scents} />
     </PaperCard>
@@ -48,23 +51,6 @@ function SwatchRow({ label, swatches }: SwatchRowProps) {
           </li>
         ))}
       </ul>
-    </div>
-  );
-}
-
-function ChipRow({ label, values }: { label: string; values: string[] }) {
-  if (values.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="mt-3 flex items-center gap-3">
-      <span className="w-20 shrink-0 text-sm text-faded">{label}</span>
-      <div className="flex flex-wrap gap-2">
-        {values.map((value) => (
-          <Chip key={value} label={value} />
-        ))}
-      </div>
     </div>
   );
 }

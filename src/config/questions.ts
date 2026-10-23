@@ -566,7 +566,7 @@ export const questions: readonly Question[] = [
     id: 'surpriseOrAsk',
     section: 'gifting',
     type: 'slider',
-    label: 'Surprise me, or ask me',
+    label: 'Gifts: surprise me, or ask me',
     ends: ['Surprise me completely', 'Ask me what I want'],
     isPrivate: true,
     isOptional: true,
