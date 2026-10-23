@@ -144,6 +144,11 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  /* Search fields get the site's own clear button, not each browser's different one. */
+  input[type='search']::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
   :focus-visible {
     outline: var(--border-width-drawn) solid var(--color-ink);
     outline-offset: 3px;

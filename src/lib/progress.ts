@@ -38,12 +38,19 @@ export function overallProgress(answers: Answers): Progress {
   };
 }
 
-export function sectionProgress(sectionId: SectionId, answers: Answers): Progress {
-  const sectionQuestions = questionsInSection(sectionId);
-  return {
-    answered: sectionQuestions.filter((question) => isAnswered(question, answers)).length,
-    total: sectionQuestions.length,
-  };
+/**
+ * The "X of Y answered" under a section heading. The song is left out: it is a
+ * bonus, not part of the page. Once the page is handed in, a slider counts as
+ * answered even if it was never moved, because its handle starts in the middle and
+ * an untouched slider is read as the middle everywhere else.
+ */
+export function sectionProgress(sectionId: SectionId, answers: Answers, submitted: boolean): Progress {
+  const counted = questionsInSection(sectionId).filter((question) => question.type !== 'song');
+  const answered = counted.filter(
+    (question) => isAnswered(question, answers) || (submitted && question.type === 'slider'),
+  );
+
+  return { answered: answered.length, total: counted.length };
 }
 
 export function isComplete(answers: Answers): boolean {

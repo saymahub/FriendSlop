@@ -22,7 +22,7 @@ export function BuyMeBoard({ profile }: BlockProps) {
   const no = [
     textAnswer(answers, 'foodsHated'),
     burritoSkips.length > 0 ? `In a burrito: ${burritoSkips.join(', ')}` : '',
-    ...labelledAnswers(answers, 'scentsHated'),
+    ...labelledAnswers(answers, 'scentsHated').map((scent) => `${scent} (scent)`),
     ...chosenSwatches(answers, 'coloursHated').map((swatch) => `${swatch.name} (colour)`),
   ].filter(Boolean);
 

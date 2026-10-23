@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CloseIcon } from '@/components/icons';
 import type { SongAnswer, SongQuestion } from '@/config/questionTypes';
 import { isSongAnswer } from '@/lib/answerDisplay';
 import { searchSongs } from '@/lib/lookup/songs';
@@ -46,14 +47,26 @@ function FoundSong({ song, onChange, onType }: FoundSongProps) {
   return (
     <div>
       {song && <ChosenSong song={song} />}
-      <input
-        type="search"
-        value={term}
-        placeholder={song ? 'Search for a different song' : 'Take Me To Church'}
-        aria-label="Search for a song"
-        onChange={(event) => setTerm(event.target.value)}
-        className={FIELD}
-      />
+      <div className="relative">
+        <input
+          type="search"
+          value={term}
+          placeholder={song ? 'Search for a different song' : 'Take Me To Church'}
+          aria-label="Search for a song"
+          onChange={(event) => setTerm(event.target.value)}
+          className={`${FIELD} pr-11`}
+        />
+        {term && (
+          <button
+            type="button"
+            onClick={() => setTerm('')}
+            aria-label="Clear search"
+            className="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center text-faded hover:text-ink"
+          >
+            <CloseIcon />
+          </button>
+        )}
+      </div>
       <SearchMatches state={results} toMatch={toMatch} onChoose={choose} />
       <button type="button" onClick={onType} className={LINK}>
         Can&rsquo;t find it? Type it in

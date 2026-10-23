@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { EyeIcon } from '@/components/icons';
 import { Button, HandLabel } from '@/components/primitives';
 import { swatches } from '@/config/swatches';
 import { fetchPeople, claimPerson, type PersonDoc } from '@/data/people';
@@ -168,26 +169,6 @@ function PinStep({ person, onBack }: PinStepProps) {
         </p>
       )}
     </div>
-  );
-}
-
-/** A thin line eye, struck through while the PIN is showing. Drawn in the text colour. */
-function EyeIcon({ crossed }: { crossed: boolean }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-5 w-5"
-    >
-      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
-      <circle cx="12" cy="12" r="3" />
-      {crossed && <path d="M3 3l18 18" />}
-    </svg>
   );
 }
 

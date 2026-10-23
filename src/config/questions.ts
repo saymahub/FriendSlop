@@ -231,7 +231,7 @@ export const questions: readonly Question[] = [
     max: 3,
     allowOther: true,
     options: [
-      { value: 'cosy', label: 'Cosy and warm' },
+      { value: 'cozy', label: 'Cozy and warm' },
       { value: 'minimal', label: 'Minimal' },
       { value: 'cottagecore', label: 'Cottagecore' },
       { value: 'vintage', label: 'Vintage' },

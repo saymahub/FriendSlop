@@ -1,8 +1,9 @@
+import { PlayIcon, SpeakerIcon } from '@/components/icons';
 import { swatchVariables } from '@/config/swatches';
 import { useMusic } from '@/state/MusicContext';
 
 const CONTROL =
-  'flex min-h-11 min-w-11 items-center justify-center rounded-card border-2 border-paper-edge bg-paper text-lg';
+  'flex min-h-11 min-w-11 items-center justify-center rounded-card border-2 border-paper-edge bg-paper text-ink-soft';
 
 /**
  * Pinned to the bottom of a profile while it has a song, clear of the iPhone home
@@ -43,7 +44,7 @@ export function NowPlayingBar() {
         {song.previewUrl ? (
           <>
             <button type="button" onClick={toggleMute} aria-label={muted ? 'Unmute' : 'Mute'} className={CONTROL}>
-              <span aria-hidden="true">{muted ? '🔇' : '🔊'}</span>
+              <SpeakerIcon muted={muted} />
             </button>
             <button
               type="button"
@@ -51,7 +52,7 @@ export function NowPlayingBar() {
               aria-label={playing ? 'Pause' : `Play ${song.title}`}
               className={`${CONTROL} border-ink bg-keep text-keep-ink`}
             >
-              <span aria-hidden="true">{playing ? '❚❚' : '▶'}</span>
+              <PlayIcon playing={playing} />
             </button>
           </>
         ) : (

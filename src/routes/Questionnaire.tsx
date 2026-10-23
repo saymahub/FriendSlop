@@ -74,6 +74,7 @@ function MemberForm({ personId, submitted, onSubmit }: MemberFormProps) {
           blurb={section.blurb}
           answers={answers}
           cardName={cardName}
+          submitted={submitted}
           onChange={setAnswer}
         />
       ))}
@@ -109,11 +110,12 @@ type SectionBlockProps = {
   blurb: string;
   answers: Answers;
   cardName: string | undefined;
+  submitted: boolean;
   onChange: (questionId: string, value: never) => void;
 };
 
-function SectionBlock({ sectionId, title, blurb, answers, cardName, onChange }: SectionBlockProps) {
-  const done = sectionProgress(sectionId, answers);
+function SectionBlock({ sectionId, title, blurb, answers, cardName, submitted, onChange }: SectionBlockProps) {
+  const done = sectionProgress(sectionId, answers, submitted);
 
   return (
     <section className="mb-8">
@@ -206,7 +208,7 @@ function SubmitPanel({ answers, submitted, saving, onSubmit, onSave }: SubmitPan
   if (submitted) {
     return (
       <PaperCard className="text-center">
-        <HandLabel size="lg">That&rsquo;s you done.</HandLabel>
+        <HandLabel size="lg">That&rsquo;s it for now!</HandLabel>
         <p className="mt-1 mb-4 text-sm text-ink-soft">
           Everyone else&rsquo;s pages are open to you now. Edit anything here, then save again.
         </p>
