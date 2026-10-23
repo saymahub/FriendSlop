@@ -6,6 +6,7 @@ export type Flower = { readonly id: string; readonly name: string };
 
 export const flowers: readonly Flower[] = [
   { id: 'rose', name: 'Rose' },
+  { id: 'peony', name: 'Peony' },
   { id: 'tulip', name: 'Tulip' },
   { id: 'sunflower', name: 'Sunflower' },
   { id: 'daisy', name: 'Daisy' },
@@ -17,4 +18,6 @@ export const flowers: readonly Flower[] = [
   { id: 'dahlia', name: 'Dahlia' },
   { id: 'anemone', name: 'Anemone' },
   { id: 'iris', name: 'Iris' },
+  { id: 'bleedingheart', name: 'Bleeding heart' },
+  { id: 'lilyofthevalley', name: 'Lily of the valley' },
 ];
