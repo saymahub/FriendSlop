@@ -1,6 +1,7 @@
 import { questions } from '@/config/questions';
 import type { AnswerValue, Question } from '@/config/questionTypes';
 import type { GroupMember } from '@/data/people';
+import { submittedSliderAnswer } from '@/lib/answerDisplay';
 import { isChoiceQuestion, picksOf } from './picks';
 
 /**
@@ -23,7 +24,7 @@ export function rankTwins(me: GroupMember, group: readonly GroupMember[]): Twin[
 
 function similarity(left: GroupMember, right: GroupMember): number | undefined {
   const scores = questions
-    .map((question) => agreement(question, left.answers[question.id], right.answers[question.id]))
+    .map((question) => agreement(question, answerOf(left, question), answerOf(right, question)))
     .filter((score): score is number => score !== undefined);
 
   if (scores.length < MINIMUM_SHARED_QUESTIONS) {
@@ -31,6 +32,11 @@ function similarity(left: GroupMember, right: GroupMember): number | undefined {
   }
 
   return scores.reduce((sum, score) => sum + score, 0) / scores.length;
+}
+
+/** Everyone compared here has submitted, so an untouched slider counts as the middle. */
+function answerOf(member: GroupMember, question: Question): AnswerValue | undefined {
+  return question.type === 'slider' ? submittedSliderAnswer(member.answers, question.id) : member.answers[question.id];
 }
 
 /**

@@ -96,6 +96,24 @@ export function cutoutLabel(name: string): string {
 }
 
 /** A slider's stored 0-100, or undefined when it was never moved. */
+/** Where a slider's handle starts, on the same 0-100 scale the answers use. */
+export const SLIDER_MIDDLE = 50;
+
+/**
+ * A slider on a page that has been handed in. The handle starts in the middle, so
+ * one they never moved reads as the middle. "Prefer not to say" stores a
+ * deliberate null, which stays undefined: declining is not the same as the middle.
+ */
+export function submittedSliderAnswer(answers: Answers, questionId: string): number | undefined {
+  const value = answers[questionId];
+
+  if (value === null) {
+    return undefined;
+  }
+
+  return typeof value === 'number' ? value : SLIDER_MIDDLE;
+}
+
 export function sliderAnswer(answers: Answers, questionId: string): number | undefined {
   const value = answers[questionId];
   return typeof value === 'number' ? value : undefined;

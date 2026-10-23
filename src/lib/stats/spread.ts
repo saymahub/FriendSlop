@@ -1,6 +1,6 @@
 import type { SliderQuestion } from '@/config/questionTypes';
 import type { GroupMember } from '@/data/people';
-import { sliderAnswer } from '@/lib/answerDisplay';
+import { submittedSliderAnswer } from '@/lib/answerDisplay';
 
 /** People who put the slider in the same place, so they can be drawn as one stack. */
 export type SliderStop = { position: number; members: GroupMember[] };
@@ -10,7 +10,7 @@ export type SliderSpread = { stops: SliderStop[]; average: number };
 /** Where everyone landed on one slider, or undefined when nobody moved it. */
 export function spreadOf(question: SliderQuestion, group: readonly GroupMember[]): SliderSpread | undefined {
   const placed = group
-    .map((member) => ({ member, position: sliderAnswer(member.answers, question.id) }))
+    .map((member) => ({ member, position: submittedSliderAnswer(member.answers, question.id) }))
     .filter((entry): entry is { member: GroupMember; position: number } => entry.position !== undefined);
 
   if (placed.length === 0) {

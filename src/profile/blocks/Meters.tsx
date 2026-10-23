@@ -1,18 +1,21 @@
 import { PaperCard } from '@/components/primitives';
 import { BlockHeading } from '../BlockHeading';
 import { questions } from '@/config/questions';
-import { sliderAnswer } from '@/lib/answerDisplay';
+import { sliderAnswer, submittedSliderAnswer } from '@/lib/answerDisplay';
 import type { SliderQuestion } from '@/config/questionTypes';
 import type { BlockProps } from '../blockTypes';
 
-/** Every slider they moved, drawn as a gauge with its ends labelled in words. */
+/**
+ * Every slider, drawn as a gauge with its ends labelled in words. Once the page is
+ * handed in, an untouched slider shows in the middle, where its handle was left.
+ */
 export function Meters({ profile, showPrivate }: BlockProps) {
   const sliders = questions.filter(
     (question): question is SliderQuestion => question.type === 'slider' && (showPrivate || !question.isPrivate),
   );
 
   const answered = sliders
-    .map((question) => ({ question, position: sliderAnswer(profile.answers, question.id) }))
+    .map((question) => ({ question, position: positionOf(profile, question.id) }))
     .filter((meter): meter is { question: SliderQuestion; position: number } => meter.position !== undefined);
 
   if (answered.length === 0) {
@@ -49,4 +52,10 @@ function Meter({ question, position }: { question: SliderQuestion; position: num
       </div>
     </div>
   );
+}
+
+function positionOf(profile: BlockProps['profile'], questionId: string): number | undefined {
+  return profile.submitted
+    ? submittedSliderAnswer(profile.answers, questionId)
+    : sliderAnswer(profile.answers, questionId);
 }
