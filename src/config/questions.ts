@@ -266,6 +266,7 @@ export const questions: readonly Question[] = [
       { value: 'lego', label: 'Lego' },
       { value: 'cooking', label: 'Cooking' },
       { value: 'baking', label: 'Baking' },
+      { value: 'politics', label: 'Politics' },
       { value: 'cycling', label: 'Cycling' },
       { value: 'sports', label: 'Sports' },
       { value: 'workingOut', label: 'Working out' },

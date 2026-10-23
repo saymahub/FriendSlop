@@ -46,3 +46,6 @@ art-raw/
 
 # Real names for seeding the roster, mapped by anonymous id
 src/config/names.local.json
+
+# other
+src/assets/stickers/
