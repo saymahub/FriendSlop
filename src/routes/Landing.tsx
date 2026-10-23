@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, HandLabel, TornDivider } from '@/components/primitives';
+import { tapeNames, type TapeName } from '@/assets/registry';
+import { Button, HandLabel, Tape } from '@/components/primitives';
 import { useViewer } from '@/state/ViewerContext';
 
 export function Landing() {
@@ -21,7 +23,7 @@ export function Landing() {
         You are my friends. (❁´◡`❁)
       </p>
 
-      <TornDivider className="my-8" />
+      <TapeRow />
 
       <div className="flex flex-col items-center gap-3">
         <Button onClick={() => navigate('/pick')} className="w-full max-w-xs">
@@ -37,4 +39,41 @@ export function Landing() {
       </p>
     </div>
   );
+}
+
+const TAPES_IN_ROW = 5;
+
+/** Each strip leans the other way to the last, so the row zigzags. */
+const LEAN_DEGREES = 7;
+
+/**
+ * Five different washi strips side by side, alternating up and down. The
+ * patterns are shuffled once per visit, so the row never repeats a pattern and
+ * never reshuffles while someone is looking at it.
+ */
+function TapeRow() {
+  const [patterns] = useState(() => shuffled(tapeNames).slice(0, TAPES_IN_ROW));
+
+  return (
+    <div aria-hidden="true" className="my-8 flex justify-center">
+      {patterns.map((pattern, index) => (
+        <Tape
+          key={pattern}
+          placement="loose"
+          pattern={pattern}
+          style={{ rotate: `${index % 2 === 0 ? -LEAN_DEGREES : LEAN_DEGREES}deg` }}
+          className="-mx-1 w-1/5 max-w-28"
+        />
+      ))}
+    </div>
+  );
+}
+
+function shuffled(names: readonly TapeName[]): TapeName[] {
+  const copy = [...names];
+  for (let index = copy.length - 1; index > 0; index--) {
+    const swap = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[swap]] = [copy[swap], copy[index]];
+  }
+  return copy;
 }
