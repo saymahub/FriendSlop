@@ -25,7 +25,7 @@ export function Credits() {
         <h2 className="mb-2 font-bold text-ink">Art</h2>
         <ul className="space-y-1 text-ink-soft">
           <li>
-            <a href="https://www.vecteezy.com/free-vector/washi-tape" target="_blank" rel="noopener noreferrer" className="underline">
+            <a href="https://www.vecteezy.com/free-vector/washi-tape" target="_blank" rel="noopener noreferrer" className="font-bold underline">
               Washi Tape Vectors by Vecteezy
             </a>
           </li>

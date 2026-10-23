@@ -31,7 +31,9 @@ export function SearchMatches<T>({ state, toMatch, onChoose }: SearchMatchesProp
   }
 
   return (
-    <ul className="mt-2 divide-y divide-paper-edge rounded-card border-2 border-paper-edge bg-paper">
+    // About four rows show at once; the rest scroll inside the list, which keeps
+    // the page itself from jumping as results come and go.
+    <ul className="mt-2 max-h-64 divide-y divide-paper-edge overflow-y-auto overscroll-contain rounded-card border-2 border-paper-edge bg-paper">
       {state.results.map((result) => {
         const match = toMatch(result);
 

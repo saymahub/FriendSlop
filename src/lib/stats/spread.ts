@@ -5,7 +5,7 @@ import { submittedSliderAnswer } from '@/lib/answerDisplay';
 /** People who put the slider in the same place, so they can be drawn as one stack. */
 export type SliderStop = { position: number; members: GroupMember[] };
 
-export type SliderSpread = { stops: SliderStop[]; average: number };
+export type SliderSpread = { stops: SliderStop[] };
 
 /** Where everyone landed on one slider, or undefined when nobody moved it. */
 export function spreadOf(question: SliderQuestion, group: readonly GroupMember[]): SliderSpread | undefined {
@@ -22,8 +22,5 @@ export function spreadOf(question: SliderQuestion, group: readonly GroupMember[]
     stops.set(position, [...(stops.get(position) ?? []), member]);
   }
 
-  return {
-    stops: [...stops.entries()].map(([position, members]) => ({ position, members })),
-    average: placed.reduce((sum, entry) => sum + entry.position, 0) / placed.length,
-  };
+  return { stops: [...stops.entries()].map(([position, members]) => ({ position, members })) };
 }
