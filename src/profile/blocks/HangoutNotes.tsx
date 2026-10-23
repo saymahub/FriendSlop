@@ -11,7 +11,7 @@ export function HangoutNotes({ profile }: BlockProps) {
     { label: 'Ideal Saturday plans', values: labelledAnswers(answers, 'idealSaturday') },
     { label: 'Group size', values: labelledAnswers(answers, 'groupSize') },
     { label: 'I’ll always eat here', values: [textAnswer(answers, 'alwaysYesRestaurant')].filter(Boolean) },
-    { label: 'What kinda plans?', values: labelledAnswers(answers, 'planNotice') },
+    { label: 'Do I need a heads up?', values: labelledAnswers(answers, 'planNotice') },
     { label: 'Not doing this', values: labelledAnswers(answers, 'hardNoActivities') },
   ];
 
