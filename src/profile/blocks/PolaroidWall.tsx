@@ -6,7 +6,13 @@ import { chosenFlowers, pictureOf, textAnswer } from '@/lib/answerDisplay';
 import type { Flower } from '@/config/flowers';
 import type { BlockProps } from '../blockTypes';
 
-const PICKS = [
+/**
+ * `fill` crops a picture to the square rather than fitting it whole. Only the
+ * trip uses it: its picture is a very wide destination banner, which fitted would
+ * be a thin strip, and scenery still reads as the place when cropped. Posters and
+ * covers are kept whole.
+ */
+const PICKS: readonly { questionId: string; caption: string; fill?: true }[] = [
   { questionId: 'show', caption: 'Show' },
   { questionId: 'movie', caption: 'Film' },
   { questionId: 'book', caption: 'Book' },
@@ -14,8 +20,8 @@ const PICKS = [
   { questionId: 'artist', caption: 'On repeat' },
   { questionId: 'anime', caption: 'Anime' },
   { questionId: 'animal', caption: 'Animal' },
-  { questionId: 'nextCountry', caption: 'Next trip' },
-] as const;
+  { questionId: 'nextCountry', caption: 'Next trip', fill: true },
+];
 
 /** Favourites as tilted photo frames: the picture they picked, or the title they typed. */
 export function PolaroidWall({ profile }: BlockProps) {
@@ -39,7 +45,7 @@ export function PolaroidWall({ profile }: BlockProps) {
         {picks.map((pick) => (
           <Polaroid key={pick.questionId} caption={pick.caption} tiltSeed={pick.questionId}>
             {pick.picture ? (
-              <PictureFill src={pick.picture} title={pick.value} />
+              <PictureFit src={pick.picture} title={pick.value} fill={pick.fill === true} />
             ) : (
               <p className="px-2 text-center text-sm font-bold text-ink-soft">{pick.value}</p>
             )}
@@ -55,11 +61,15 @@ export function PolaroidWall({ profile }: BlockProps) {
   );
 }
 
-/** The picked picture fills the frame, with its title kept readable underneath. */
-function PictureFill({ src, title }: { src: string; title: string }) {
+/**
+ * The picked picture, fitted whole inside the frame so a tall poster keeps its
+ * shape, or cropped to fill it when `fill` is set. The title stays readable
+ * underneath.
+ */
+function PictureFit({ src, title, fill }: { src: string; title: string; fill: boolean }) {
   return (
     <div className="flex h-full w-full flex-col">
-      <img src={src} alt="" className="min-h-0 w-full flex-1 object-cover" />
+      <img src={src} alt="" className={`min-h-0 w-full flex-1 ${fill ? 'object-cover' : 'object-contain p-1'}`} />
       <p className="truncate bg-white px-1 pt-1 text-center text-xs font-bold text-ink-soft">{title}</p>
     </div>
   );
