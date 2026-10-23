@@ -33,9 +33,9 @@ export const stickers = {
  * picked it. Dropping a picture into `smiskis/` or `sanrio/` is all it takes to
  * offer it; a flower also needs an entry in `config/flowers.ts` for its name.
  */
-const byFileName = (files: Record<string, string>): Readonly<Record<string, string>> =>
+const byFileName = (files: Record<string, string>, extension = '.webp'): Readonly<Record<string, string>> =>
   Object.fromEntries(
-    Object.entries(files).map(([path, url]) => [path.slice(path.lastIndexOf('/') + 1, -'.webp'.length), url]),
+    Object.entries(files).map(([path, url]) => [path.slice(path.lastIndexOf('/') + 1, -extension.length), url]),
   );
 
 export const smiskis = byFileName(import.meta.glob<string>('./smiskis/*.webp', { eager: true, import: 'default' }));
@@ -43,6 +43,16 @@ export const sanrio = byFileName(import.meta.glob<string>('./sanrio/*.webp', { e
 export const flowerArt = byFileName(import.meta.glob<string>('./flowers/*.webp', { eager: true, import: 'default' }));
 
 export const cutouts = { smiski: smiskis, sanrio, flower: flowerArt } as const;
+
+/**
+ * Washi tape strips as vectors, each named for its pattern, so they stay sharp
+ * at any size. From the Vecteezy free licence, credited on the Credits page.
+ */
+export const tapes = byFileName(
+  import.meta.glob<string>('./tape/*.svg', { eager: true, import: 'default' }),
+  '.svg',
+);
+export const tapeNames = Object.keys(tapes).sort();
 
 export const textures = {
   paper: 'var(--texture-paper)',
@@ -52,3 +62,4 @@ export type StickerName = keyof typeof stickers;
 export type LogoName = keyof typeof logos;
 export type TextureName = keyof typeof textures;
 export type CutoutSet = keyof typeof cutouts;
+export type TapeName = keyof typeof tapes;

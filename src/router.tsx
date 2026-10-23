@@ -4,6 +4,7 @@ import { DevReset } from './components/shell/DevReset';
 import { EmulatorBadge } from './components/shell/EmulatorBadge';
 import { NowPlayingBar } from './components/shell/NowPlayingBar';
 import { Admin } from './routes/Admin';
+import { Credits } from './routes/Credits';
 import { GroupStats } from './routes/GroupStats';
 import { Landing } from './routes/Landing';
 import { MyProfile } from './routes/MyProfile';
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
             ),
           },
           { path: '/style-guide', element: <StyleGuide /> },
+          { path: '/credits', element: <Credits /> },
         ],
       },
       { path: '*', element: <Navigate to="/" replace /> },

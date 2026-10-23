@@ -1,5 +1,5 @@
 import { useBlocker, useNavigate } from 'react-router-dom';
-import { Button, HandLabel, PaperCard, Stamp, TornDivider } from '@/components/primitives';
+import { Button, HandLabel, PaperCard, Stamp, Tape } from '@/components/primitives';
 import { QuestionField } from '@/components/questions/QuestionField';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { questionsInSection, sections } from '@/config/questions';
@@ -133,9 +133,22 @@ function SectionBlock({ sectionId, title, blurb, answers, onChange }: SectionBlo
         ))}
       </div>
 
-      <TornDivider className="mt-8" />
+      <Tape placement="inline" className="mt-8" />
     </section>
   );
+}
+
+/** Highest threshold first: the fill takes the greenest step it has reached. */
+const PROGRESS_FILLS = [
+  { from: 100, fill: 'bg-progress-100' },
+  { from: 75, fill: 'bg-progress-75' },
+  { from: 50, fill: 'bg-progress-50' },
+  { from: 25, fill: 'bg-progress-25' },
+] as const;
+
+/** Their own colour to begin with, then a step greener at each quarter done. */
+function fillFor(percent: number): string {
+  return PROGRESS_FILLS.find((step) => percent >= step.from)?.fill ?? 'bg-[var(--person-base)]';
 }
 
 function ProgressBar({ answered, total }: { answered: number; total: number }) {
@@ -151,7 +164,7 @@ function ProgressBar({ answered, total }: { answered: number; total: number }) {
         aria-label="Questions answered"
         className="h-2.5 w-48 overflow-hidden rounded-chip border border-paper-edge bg-paper-deep"
       >
-        <div style={{ width: `${percent}%` }} className="h-full bg-[var(--person-base)]" />
+        <div style={{ width: `${percent}%` }} className={`h-full transition-colors duration-500 ${fillFor(percent)}`} />
       </div>
       <span className="text-xs text-faded">
         {answered} of {total}

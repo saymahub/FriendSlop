@@ -6,6 +6,9 @@ import type { Twin } from '@/lib/stats/twins';
 
 const TWINS_SHOWN = 3;
 
+/** The smallest of the four card tilts; the steeper ones read as crooked on a card this wide. */
+const GENTLEST_TILT = 2;
+
 /** Their closest matches, then the one person they have least in common with. */
 export function TwinBoard({ twins }: { twins: Twin[] }) {
   if (twins.length === 0) {
@@ -16,7 +19,7 @@ export function TwinBoard({ twins }: { twins: Twin[] }) {
   const furthest = twins.length > TWINS_SHOWN ? twins[twins.length - 1] : undefined;
 
   return (
-    <PaperCard tiltSeed="twins">
+    <PaperCard tiltSeed={GENTLEST_TILT}>
       <BlockHeading>Your twins</BlockHeading>
       <ol className="space-y-2">
         {closest.map((twin) => (

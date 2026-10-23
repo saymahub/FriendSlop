@@ -1,20 +1,37 @@
+import { useState } from 'react';
+import { tapeNames, tapes, type TapeName } from '@/assets/registry';
+
 type TapeProps = {
-  /** Where the strip sits relative to the card it decorates. */
-  placement?: 'top-left' | 'top-right' | 'top-centre';
+  /** Where the strip sits relative to the card it decorates, or `inline` to lie across the page as a divider. */
+  placement?: 'top-left' | 'top-right' | 'top-centre' | 'inline';
+  /** A particular pattern. Without one, each tape picks one at random. */
+  pattern?: TapeName;
   className?: string;
 };
 
 const PLACEMENTS = {
-  'top-left': '-top-3 left-5 -rotate-6',
-  'top-right': '-top-3 right-5 rotate-6',
-  'top-centre': '-top-3 left-1/2 -translate-x-1/2 -rotate-2',
+  'top-left': 'absolute w-24 -top-3 left-5 -rotate-6',
+  'top-right': 'absolute w-24 -top-3 right-5 rotate-6',
+  'top-centre': 'absolute w-24 -top-3 left-1/2 -translate-x-1/2 -rotate-2',
+  inline: 'mx-auto block w-56 max-w-full -rotate-1',
 } as const;
 
-export function Tape({ placement = 'top-centre', className = '' }: TapeProps) {
+const randomPattern = (): TapeName => tapeNames[Math.floor(Math.random() * tapeNames.length)];
+
+/**
+ * A strip of washi tape holding a card down, slightly see-through as real washi
+ * is. The random pattern is chosen once when the tape appears and kept, so it
+ * never swaps mid-visit; a fresh visit gets a fresh roll.
+ */
+export function Tape({ placement = 'top-centre', pattern, className = '' }: TapeProps) {
+  const [chosen] = useState(() => pattern ?? randomPattern());
+
   return (
-    <span
+    <img
+      src={tapes[chosen]}
+      alt=""
       aria-hidden="true"
-      className={`pointer-events-none absolute h-6 w-20 bg-tape/80 shadow-sm ${PLACEMENTS[placement]} ${className}`}
+      className={`pointer-events-none opacity-90 drop-shadow-sm ${PLACEMENTS[placement]} ${className}`}
     />
   );
 }

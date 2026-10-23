@@ -53,6 +53,12 @@
   --color-avoid-ink: #7d2b1b;
   --color-allergy: #d8402c;
 
+  /* The questionnaire's progress bar greens up a step at each quarter done */
+  --color-progress-25: #d4e9c4;
+  --color-progress-50: #aed69a;
+  --color-progress-75: #86c170;
+  --color-progress-100: #5ea84a;
+
   /* Typography. Handwriting is for labels, names and captions only — it is
      unreadable at body size, so anything people must actually read is sans. */
   /* Emilya Rown is the display face, used for titles only. Everything else is
