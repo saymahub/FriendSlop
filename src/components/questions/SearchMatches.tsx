@@ -19,7 +19,13 @@ export function SearchMatches<T>({ state, toMatch, onChoose }: SearchMatchesProp
   }
 
   if (state.status === 'failed') {
-    return <p className="mt-2 text-sm text-faded">Couldn&rsquo;t search right now. What you typed still counts.</p>;
+    // Usually Apple's limit of about twenty searches a minute per connection, which
+    // a few people on the same Wi-Fi reach quickly. It clears on its own.
+    return (
+      <p className="mt-2 text-sm text-faded">
+        Search isn't working for some reason, come back later or try a new device.
+      </p>
+    );
   }
 
   if (state.status !== 'done') {
