@@ -266,6 +266,7 @@ export const questions: readonly Question[] = [
       { value: 'workingOut', label: 'Working out' },
       { value: 'chess', label: 'Chess' },
       { value: 'crochet', label: 'Crochet' },
+      { value: 'photography', label: 'Photography' },
       { value: 'knitting', label: 'Knitting' },
       { value: 'sewing', label: 'Sewing' },
       { value: 'dancing', label: 'Dancing' },
