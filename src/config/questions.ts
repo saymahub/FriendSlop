@@ -620,7 +620,7 @@ export const questions: readonly Question[] = [
       { value: 'tea', label: 'Tea' },
       { value: 'hairTies', label: 'Hair ties' },
       { value: 'phoneChargers', label: 'Phone chargers' },
-      { value: 'toteBags', label: 'Tote bags, somehow never enough' },
+      { value: 'toteBags', label: 'Tote bags' },
     ],
   },
   {
