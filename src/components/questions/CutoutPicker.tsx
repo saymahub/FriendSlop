@@ -3,7 +3,10 @@ import { cutoutLabel } from '@/lib/answerDisplay';
 import type { CutoutQuestion } from '@/config/questionTypes';
 import type { QuestionProps } from './types';
 
-/** Pick one, tap it again to put it back. The pictures speak for themselves. */
+/**
+ * Pick one, tap it again to put it back. Putting it back stores an empty answer,
+ * not null: null means "prefer not to say", which hides the question.
+ */
 export function CutoutPicker({ question, value, onChange }: QuestionProps<CutoutQuestion>) {
   const art = cutouts[question.set];
   const names = Object.keys(art).sort();
@@ -20,7 +23,7 @@ export function CutoutPicker({ question, value, onChange }: QuestionProps<Cutout
           name={name}
           src={art[name]}
           isSelected={value === name}
-          onSelect={() => onChange(value === name ? null : name)}
+          onSelect={() => onChange(value === name ? '' : name)}
         />
       ))}
     </div>

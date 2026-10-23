@@ -14,7 +14,9 @@ type QuestionFieldProps = {
  */
 export function QuestionField({ question, value, onChange }: QuestionFieldProps) {
   const Renderer = renderers[question.type];
-  const declined = value === null;
+  // Only private questions can be declined, and only they offer the way back, so a
+  // stray null on any other question shows the question rather than a dead end.
+  const declined = question.isPrivate === true && value === null;
 
   return (
     <fieldset className="border-0 p-0">
