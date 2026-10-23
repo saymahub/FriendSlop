@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A private scrapbook site where a friend group (~20 people) records their favourite
 things, so gift-buying and planning doesn't require asking. No accounts: you pick your
-name from a grid, fill out the questionnaire (51 questions, 13 optional), and submitting
+name from a grid, fill out the questionnaire (51 questions, 14 optional), and submitting
 unlocks the vault of everyone else's profiles. That gate is the core mechanic, not a nicety.
 
 Full design document: `planning/friend-scrapbook-plan.md` (gitignored, local only).

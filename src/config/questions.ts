@@ -222,6 +222,7 @@ export const questions: readonly Question[] = [
     label: 'Colours you hate',
     variant: 'hate',
     max: 3,
+    isOptional: true,
   },
   {
     id: 'aesthetic',
