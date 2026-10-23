@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { AppShell } from './components/shell/AppShell';
 import { DevReset } from './components/shell/DevReset';
 import { EmulatorBadge } from './components/shell/EmulatorBadge';
+import { NowPlayingBar } from './components/shell/NowPlayingBar';
 import { Admin } from './routes/Admin';
 import { GroupStats } from './routes/GroupStats';
 import { Landing } from './routes/Landing';
@@ -54,6 +55,7 @@ function RootLayout() {
     <>
       <EmulatorBadge />
       <Outlet />
+      <NowPlayingBar />
       {import.meta.env.DEV && <DevReset />}
     </>
   );

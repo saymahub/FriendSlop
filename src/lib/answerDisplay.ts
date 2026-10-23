@@ -3,14 +3,34 @@ import { flowers, type Flower } from '@/config/flowers';
 import { cutouts, flowerArt, type CutoutSet } from '@/assets/registry';
 import { swatches, type SwatchId } from '@/config/swatches';
 import type { Answers } from '@/state/useAnswers';
+import { isPictureAnswer, type SongAnswer } from '@/config/questionTypes';
 import type { SwatchTriple } from '@/config/swatches';
 
 export const OTHER_PREFIX = 'other:';
 
-/** Free text, or an empty string when the question was skipped or never answered. */
+/**
+ * Free text, or an empty string when the question was skipped or never answered.
+ * A lookup answer with a picture reads as its title, so text-only screens still work.
+ */
 export function textAnswer(answers: Answers, questionId: string): string {
   const value = answers[questionId];
-  return typeof value === 'string' ? value : '';
+  return isPictureAnswer(value) ? value.title : typeof value === 'string' ? value : '';
+}
+
+export function isSongAnswer(value: unknown): value is SongAnswer {
+  return typeof value === 'object' && value !== null && 'title' in value && 'artist' in value;
+}
+
+/** Their song, or undefined when skipped or left with no title. */
+export function songAnswer(answers: Answers, questionId: string): SongAnswer | undefined {
+  const value = answers[questionId];
+  return isSongAnswer(value) && value.title.trim() !== '' ? value : undefined;
+}
+
+/** The picture picked for a lookup answer, or undefined for typed text. */
+export function pictureOf(answers: Answers, questionId: string): string | undefined {
+  const value = answers[questionId];
+  return isPictureAnswer(value) ? value.image : undefined;
 }
 
 /** Chosen options as the labels people actually picked, "other" text included. */

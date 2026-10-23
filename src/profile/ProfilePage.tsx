@@ -1,5 +1,7 @@
 import { swatches, swatchVariables, type SwatchId } from '@/config/swatches';
-import type { Profile } from '@/lib/profileData';
+import { songAnswer } from '@/lib/answerDisplay';
+import { identityOf, type Profile } from '@/lib/profileData';
+import { useSongOnPage } from '@/state/MusicContext';
 import { profileBlocks } from './profileBlocks';
 
 type ProfilePageProps = {
@@ -13,9 +15,11 @@ type ProfilePageProps = {
  */
 export function ProfilePage({ profile, showPrivate }: ProfilePageProps) {
   const visible = profileBlocks.filter((block) => showPrivate || !block.privateOnly);
+  const theme = themeFor(profile);
+  useSongOnPage(songAnswer(profile.answers, 'signatureSong'), identityOf(profile.person).name, theme);
 
   return (
-    <article style={swatchVariables(themeFor(profile))} className="flex flex-col gap-8">
+    <article style={swatchVariables(theme)} className="flex flex-col gap-8">
       {visible.map(({ id, Component }) => (
         <Component key={id} profile={profile} showPrivate={showPrivate} />
       ))}

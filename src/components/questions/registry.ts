@@ -5,6 +5,7 @@ import { ChipMultiSelect } from './ChipMultiSelect';
 import { ChipSelect } from './ChipSelect';
 import { CutoutPicker } from './CutoutPicker';
 import { DatePad } from './DatePad';
+import { PictureSearch } from './PictureSearch';
 import { ScrapNote } from './ScrapNote';
 import { SongSearch } from './SongSearch';
 import { SwatchGrid } from './SwatchGrid';
@@ -23,4 +24,5 @@ export const renderers: Record<QuestionType, FC<QuestionProps>> = {
   song: SongSearch as FC<QuestionProps>,
   date: DatePad as FC<QuestionProps>,
   cutout: CutoutPicker as FC<QuestionProps>,
+  lookup: PictureSearch as FC<QuestionProps>,
 };

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { useMusic } from '@/state/MusicContext';
 import { SidebarNav } from './SidebarNav';
 
 /**
@@ -9,6 +10,7 @@ import { SidebarNav } from './SidebarNav';
 export function AppShell() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const location = useLocation();
+  const { track } = useMusic();
 
   useEffect(() => setDrawerOpen(false), [location.pathname]);
 
@@ -22,7 +24,8 @@ export function AppShell() {
 
       <div>
         <MenuBar onOpen={() => setDrawerOpen(true)} />
-        <main className="mx-auto w-full max-w-3xl px-4 py-8">
+        {/* Room under the last block for the now-playing bar, so it never covers anything. */}
+        <main className={`mx-auto w-full max-w-3xl px-4 py-8 ${track ? 'pb-32' : ''}`}>
           <Outlet />
         </main>
       </div>

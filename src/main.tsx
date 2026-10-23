@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import './index.css';
 import { router } from './router';
+import { MusicProvider } from './state/MusicContext';
 import { ViewerProvider } from './state/ViewerContext';
 
 const container = document.getElementById('root');
@@ -14,7 +15,9 @@ if (!container) {
 createRoot(container).render(
   <StrictMode>
     <ViewerProvider>
-      <RouterProvider router={router} />
+      <MusicProvider>
+        <RouterProvider router={router} />
+      </MusicProvider>
     </ViewerProvider>
   </StrictMode>,
 );

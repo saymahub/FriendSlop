@@ -1,7 +1,8 @@
 import type { CutoutSet } from '@/assets/registry';
+import type { LookupSource } from '@/lib/lookup';
 import type { SwatchId } from './swatches';
 
-export type QuestionType = 'text' | 'single' | 'multi' | 'slider' | 'swatch' | 'song' | 'date' | 'cutout';
+export type QuestionType = 'text' | 'single' | 'multi' | 'slider' | 'swatch' | 'song' | 'date' | 'cutout' | 'lookup';
 
 export type SectionId = 'basics' | 'food' | 'colour' | 'media' | 'hangouts' | 'gifting';
 
@@ -68,6 +69,14 @@ export type DateQuestion = BaseQuestion & { readonly type: 'date' };
 /** Pick one picture from a set in the asset registry; stores its file name. */
 export type CutoutQuestion = BaseQuestion & { readonly type: 'cutout'; readonly set: CutoutSet };
 
+/** A text answer that can carry a picture, found by searching `source` as they type. */
+export type LookupQuestion = BaseQuestion & {
+  readonly type: 'lookup';
+  readonly source: LookupSource;
+  /** A real example answer. Never starts with "e.g.". */
+  readonly placeholder: string;
+};
+
 export type Question =
   | TextQuestion
   | SingleQuestion
@@ -76,10 +85,21 @@ export type Question =
   | SwatchQuestion
   | SongQuestion
   | DateQuestion
-  | CutoutQuestion;
+  | CutoutQuestion
+  | LookupQuestion;
 
 /** A slider stores 0-100; a swatch question stores swatch ids in pick order. */
-export type AnswerValue = string | string[] | number | SwatchId[] | SongAnswer | null;
+export type AnswerValue = string | string[] | number | SwatchId[] | SongAnswer | PictureAnswer | null;
+
+/**
+ * A lookup answer once a search result was picked. Typed text with no pick stays
+ * a plain string, which is also how every answer from before lookups was stored.
+ */
+export type PictureAnswer = { readonly title: string; readonly image: string };
+
+export function isPictureAnswer(value: unknown): value is PictureAnswer {
+  return typeof value === 'object' && value !== null && 'title' in value && 'image' in value;
+}
 
 /**
  * Artwork and links are absent when someone types a track in by hand rather than

@@ -18,8 +18,8 @@ export function ProfileHeader({ profile }: BlockProps) {
           set="smiski"
           name={smiski}
           label={`Smiski: ${cutoutLabel(smiski)}`}
-          size={112}
-          className="absolute right-0 -bottom-0 z-10 sm:-right-4 sm:size-40"
+          size={96}
+          className="absolute right-0 -bottom-2 z-10 sm:-right-4 sm:bottom-0 sm:size-40"
         />
       )}
       {sanrio && (
@@ -27,9 +27,9 @@ export function ProfileHeader({ profile }: BlockProps) {
           set="sanrio"
           name={sanrio}
           label={`Favourite Sanrio character: ${cutoutLabel(sanrio)}`}
-          size={112}
+          size={96}
           lean="left"
-          className="absolute left-0 -bottom-0 z-10 sm:-left-4 sm:size-40"
+          className="absolute left-0 -bottom-2 z-10 sm:-left-4 sm:bottom-0 sm:size-40"
         />
       )}
 
