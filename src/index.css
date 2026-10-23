@@ -68,6 +68,7 @@
   --font-hand: 'Coming Soon', 'Bradley Hand', cursive;
   --font-body: 'Coming Soon', ui-sans-serif, system-ui, sans-serif;
 
+  --text-hand-xs: 1.05rem;
   --text-hand-sm: 1.3rem;
   --text-hand-md: 1.3rem;
   --text-hand-lg: 1.85rem;

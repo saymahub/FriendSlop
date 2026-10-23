@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A private scrapbook site where a friend group (~20 people) records their favourite
 things, so gift-buying and planning doesn't require asking. No accounts: you pick your
-name from a grid, fill out a 47-question form, and submitting unlocks the vault of
-everyone else's profiles. That gate is the core mechanic, not a nicety.
+name from a grid, fill out the questionnaire (51 questions, 13 optional), and submitting
+unlocks the vault of everyone else's profiles. That gate is the core mechanic, not a nicety.
 
 Full design document: `planning/friend-scrapbook-plan.md` (gitignored, local only).
 It is the source of truth for scope, question list, and build order — read it before
@@ -36,13 +36,14 @@ making architectural decisions, and update it when a decision changes.
 
 ## Status
 
-Step 1 of the build order is done: scaffold, theme file, the nine primitives, the 24
-swatches and the 43 questions, reviewable at `src/routes/StyleGuide.tsx`, which is
-currently the whole app. No router, no Firestore, no auth yet.
+Live on Cloudflare Pages. Built: name picker and PIN claims, the questionnaire, profile
+pages, the vault gate, group stats (favourites, twin scores, slider spreads), the music
+player, picture search for favourites, and the admin panel (seeding, PIN resets,
+backups, danger zone). The style guide at `/style-guide` still shows every primitive.
 
-Stack in place: Vite 7 + React 19 + TypeScript + Tailwind v4. Still to add per the
-plan: React Router, Framer Motion, Recharts, canvas-confetti, Firestore. Hosting is
-Cloudflare Pages.
+Stack: Vite 7 + React 19 + TypeScript + Tailwind v4 + React Router 7 + Firestore.
+Not built yet: confetti on submit, page motion, and the admin question toggles below.
+Recharts was dropped: the stats charts are plain CSS bars and need nothing more.
 
 ## Commands
 
@@ -86,11 +87,14 @@ passphrase compared in client code, since anything in the bundle is public.
 
 ### Questions live in code, answers are a flat map
 
-The 47 questions are a typed config array in `questions.ts`. A person's `answers` is a
+The questions are a typed config array in `questions.ts`. A person's `answers` is a
 flat `Record<string, unknown>` keyed by question id, so adding or reordering a question
-never needs a data migration. The admin panel can toggle questions live via a
-`settings/config` overrides document merged over the code config — the code array stays
-the base, overrides only enable/disable and reorder.
+never needs a data migration. Planned but not built: the admin panel toggling questions
+live via a `settings/config` overrides document merged over the code config — the code
+array stays the base, overrides only enable/disable and reorder.
+
+Retiring a question leaves its old answers in the data, unseen; removing them is a
+backup-and-restore job, not something to do on the fly.
 
 ### Four modularity decisions
 
@@ -137,6 +141,32 @@ unmounts on navigation and restarts the track. No autoplay (browsers block it), 
 Song search uses the **iTunes Search API via JSONP** — no key, no backend. Spotify was
 ruled out: server-side client secret required, and `preview_url` is deprecated.
 
+Nothing plays until a tap (`useSongOnPage` only offers a profile's song); pause is
+instant, leaving a profile fades out, and playback is capped at 35% volume.
+
+### Favourites search public APIs from the browser
+
+`lookup` questions search as you type, each with a `source` in `src/lib/lookup/`:
+Wikipedia (with a "film" or "TV series" hint, and `pilicense=any` so posters and game
+covers come back), Wikivoyage banners via Wikidata for places, Apple Books, Deezer for
+artist photos, and AniList for anime. All are keyless; iTunes and Deezer send no CORS
+header, so they go through JSONP. A picked result is stored as `{ title, image }`;
+typed text with no pick stays a plain string, so old answers and niche ones still work.
+Images are hot-linked, never copied into Firebase. New sources must also be credited on
+`/credits`.
+
+### Picture questions read their options from a folder
+
+`cutout` questions (Smiski, Sanrio) list every WebP in their asset folder; the file name
+is both the stored id and the label. Renaming a file orphans everyone who picked it.
+
+### Real names never reach the repo
+
+`roster.ts` holds anonymous ids, colours and emoji. Names live in the gitignored
+`src/config/names.local.json`, loaded lazily only when the admin seeds, so a build
+without the file (Cloudflare's) ships no names. Seeding only adds missing ids; it never
+updates or removes. `hidden: true` on a person's document hides them everywhere.
+
 ## Conventions
 
 - Mobile-first. Most people will fill this out on their phone. Concretely, that means:
@@ -148,10 +178,13 @@ ruled out: server-side client secret required, and `preview_url` is deprecated.
 - Every multi-select gets an "other" option; every private question gets an explicit
   "prefer not to say" that stores a deliberate null.
 - Swatch and chip names are always visible, not hover-only — there's no hover on touch,
-  and colour alone can't carry meaning for colourblind users.
+  and colour alone can't carry meaning for colourblind users. The Smiski and Sanrio
+  pickers are the deliberate exception: the pictures are the point, and their names go
+  in alt text instead.
 - Decorative art is `pointer-events-none`; motion is gated behind `prefers-reduced-motion`.
-- Committed artwork is cleaned and resized to 2x display size, WebP at 80%. Raw scans and
-  phone photos stay in the gitignored `art-raw/`. Total art budget: under 3 MB.
+- Committed artwork is cleaned and resized to 2x display size, WebP at 80%; vector art
+  (the washi tape) stays SVG, run through SVGO. Raw scans and phone photos stay in the
+  gitignored `art-raw/`. Total art budget: under 3 MB.
 
 ## Code standards
 

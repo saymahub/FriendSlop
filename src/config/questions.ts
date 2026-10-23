@@ -22,6 +22,7 @@ export const questions: readonly Question[] = [
     label: 'Your name',
     help: 'Prefilled from your card. Change it if you go by something else.',
     placeholder: 'Nadia',
+    isOptional: true,
   },
   {
     id: 'birthday',
@@ -45,6 +46,7 @@ export const questions: readonly Question[] = [
     label: 'Your emoji',
     help: 'Shows at the top of your page and on your card.',
     placeholder: '🌻',
+    isOptional: true,
   },
   {
     id: 'oneSentence',
@@ -149,7 +151,7 @@ export const questions: readonly Question[] = [
       { value: 'nuts', label: 'Salted nuts' },
       { value: 'pastries', label: 'Pastries' },
       { value: 'instantNoodles', label: 'Instant noodles' },
-      { value: 'olives', label: 'Olives' },
+      { value: 'pretzels', label: 'Pretzels' },
     ],
   },
   {
@@ -165,6 +167,7 @@ export const questions: readonly Question[] = [
     type: 'slider',
     label: 'Spice tolerance',
     ends: ['Ketchup is spicy', 'I bring my own hot sauce'],
+    isOptional: true,
   },
   {
     id: 'sweetSavoury',
@@ -172,6 +175,7 @@ export const questions: readonly Question[] = [
     type: 'slider',
     label: 'Sweet or savoury',
     ends: ['Dessert first', 'Give me the cheese board'],
+    isOptional: true,
   },
   {
     id: 'cakeFlavour',
@@ -373,6 +377,7 @@ export const questions: readonly Question[] = [
     type: 'slider',
     label: 'Pattern or plain',
     ends: ['Plain, every time', 'Head to toe print'],
+    isOptional: true,
   },
 
   // Media
@@ -478,6 +483,7 @@ export const questions: readonly Question[] = [
     type: 'slider',
     label: 'Loud or chill',
     ends: ['Blanket and a film', 'Front of the speakers'],
+    isOptional: true,
   },
   {
     id: 'indoorOutdoor',
@@ -485,6 +491,7 @@ export const questions: readonly Question[] = [
     type: 'slider',
     label: 'Indoor or outdoor',
     ends: ['Indoors, thank you', 'Outside in any weather'],
+    isOptional: true,
   },
   {
     id: 'groupSize',
@@ -553,6 +560,7 @@ export const questions: readonly Question[] = [
     label: 'Practical or sentimental',
     ends: ['Something I will actually use', 'Something that makes me cry'],
     isPrivate: true,
+    isOptional: true,
   },
   {
     id: 'surpriseOrAsk',
@@ -561,6 +569,7 @@ export const questions: readonly Question[] = [
     label: 'Surprise me, or ask me',
     ends: ['Surprise me completely', 'Ask me what I want'],
     isPrivate: true,
+    isOptional: true,
   },
   {
     id: 'topSize',

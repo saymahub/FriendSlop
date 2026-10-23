@@ -3,11 +3,13 @@ import { Button, HandLabel, PaperCard, Stamp, Tape } from '@/components/primitiv
 import { QuestionField } from '@/components/questions/QuestionField';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
 import { questionsInSection, sections } from '@/config/questions';
+import { fetchPerson } from '@/data/people';
 import { isComplete, overallProgress, sectionProgress } from '@/lib/progress';
+import { useAsync } from '@/lib/useAsync';
 import { useUnloadWarning } from '@/lib/useUnloadWarning';
 import { useViewer } from '@/state/ViewerContext';
 import { useAnswers, type Answers } from '@/state/useAnswers';
-import type { SectionId } from '@/config/questionTypes';
+import type { Question, SectionId } from '@/config/questionTypes';
 
 export function Questionnaire() {
   const { viewer, markSubmitted } = useViewer();
@@ -24,6 +26,8 @@ type MemberFormProps = { personId: string; submitted: boolean; onSubmit: () => P
 function MemberForm({ personId, submitted, onSubmit }: MemberFormProps) {
   const { answers, loading, error, setAnswer, save, discard, hasUnsavedChanges, saving } =
     useAnswers(personId);
+  const card = useAsync(() => fetchPerson(personId), [personId]);
+  const cardName = card.status === 'ready' ? card.value?.name : undefined;
 
   // Leaving by a link is interceptable; closing the tab is not, so the browser's
   // own warning covers that case.
@@ -69,6 +73,7 @@ function MemberForm({ personId, submitted, onSubmit }: MemberFormProps) {
           title={section.title}
           blurb={section.blurb}
           answers={answers}
+          cardName={cardName}
           onChange={setAnswer}
         />
       ))}
@@ -103,10 +108,11 @@ type SectionBlockProps = {
   title: string;
   blurb: string;
   answers: Answers;
+  cardName: string | undefined;
   onChange: (questionId: string, value: never) => void;
 };
 
-function SectionBlock({ sectionId, title, blurb, answers, onChange }: SectionBlockProps) {
+function SectionBlock({ sectionId, title, blurb, answers, cardName, onChange }: SectionBlockProps) {
   const done = sectionProgress(sectionId, answers);
 
   return (
@@ -122,7 +128,7 @@ function SectionBlock({ sectionId, title, blurb, answers, onChange }: SectionBlo
       </div>
 
       <div className="flex flex-col gap-6">
-        {questionsInSection(sectionId).map((question) => (
+        {questionsInSection(sectionId).map((base) => withCardName(base, cardName)).map((question) => (
           <PaperCard key={question.id}>
             <QuestionField
               question={question}
@@ -149,6 +155,17 @@ const PROGRESS_FILLS = [
 /** Their own colour to begin with, then a step greener at each quarter done. */
 function fillFor(percent: number): string {
   return PROGRESS_FILLS.find((step) => percent >= step.from)?.fill ?? 'bg-[var(--person-base)]';
+}
+
+/**
+ * The name question's example is the name on their own card, so it reads as a
+ * suggestion for them rather than someone else's name. Any other question, or a
+ * card still loading, keeps the example from `questions.ts`.
+ */
+function withCardName(question: Question, cardName: string | undefined): Question {
+  return question.id === 'displayName' && question.type === 'text' && cardName
+    ? { ...question, placeholder: cardName }
+    : question;
 }
 
 function ProgressBar({ answered, total }: { answered: number; total: number }) {
