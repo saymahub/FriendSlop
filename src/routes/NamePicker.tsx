@@ -79,6 +79,7 @@ function PinStep({ person, onBack }: PinStepProps) {
   const [pin, setPinValue] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [showPin, setShowPin] = useState(false);
 
   const isNew = person.claimedBy === null;
   const identity = identityOf(person);
@@ -124,16 +125,30 @@ function PinStep({ person, onBack }: PinStepProps) {
       </p>
 
       <form onSubmit={submit}>
-        <input
-          type="password"
-          inputMode="numeric"
-          autoComplete="one-time-code"
-          value={pin}
-          maxLength={PIN_LENGTH}
-          aria-label={`${PIN_LENGTH}-digit PIN`}
-          onChange={(event) => setPinValue(event.target.value.replace(/\D/g, ''))}
-          className="w-full rounded-card border-2 border-paper-edge bg-paper px-3 py-3 text-center text-2xl tracking-[0.5em]"
-        />
+        <div className="relative">
+          <input
+            type={showPin ? 'text' : 'password'}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            value={pin}
+            maxLength={PIN_LENGTH}
+            aria-label={`${PIN_LENGTH}-digit PIN`}
+            onChange={(event) => setPinValue(event.target.value.replace(/\D/g, ''))}
+            className="w-full rounded-card border-2 border-paper-edge bg-paper px-12 py-3 text-center text-2xl tracking-[0.5em]"
+          />
+          {/* Only while choosing a PIN: seeing it once guards against a typo they could not get back past. */}
+          {isNew && (
+            <button
+              type="button"
+              onClick={() => setShowPin((shown) => !shown)}
+              aria-label={showPin ? 'Hide PIN' : 'Show PIN'}
+              aria-pressed={showPin}
+              className="absolute inset-y-0 right-1 flex min-w-11 items-center justify-center text-faded hover:text-ink"
+            >
+              <EyeIcon crossed={showPin} />
+            </button>
+          )}
+        </div>
 
         {error && <p className="mt-3 text-sm text-allergy">{error}</p>}
 
@@ -153,6 +168,26 @@ function PinStep({ person, onBack }: PinStepProps) {
         </p>
       )}
     </div>
+  );
+}
+
+/** A thin line eye, struck through while the PIN is showing. Drawn in the text colour. */
+function EyeIcon({ crossed }: { crossed: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5"
+    >
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+      <circle cx="12" cy="12" r="3" />
+      {crossed && <path d="M3 3l18 18" />}
+    </svg>
   );
 }
 
