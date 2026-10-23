@@ -1,6 +1,6 @@
 import { questionsById } from '@/config/questions';
 import { flowers, type Flower } from '@/config/flowers';
-import { cutouts, flowerArt, type CutoutSet } from '@/assets/registry';
+import { cutouts, type CutoutSet } from '@/assets/registry';
 import { swatches, type SwatchId } from '@/config/swatches';
 import type { Answers } from '@/state/useAnswers';
 import { isPictureAnswer, type SongAnswer } from '@/config/questionTypes';
@@ -63,7 +63,8 @@ export function chosenSwatches(answers: Answers, questionId: string): SwatchTrip
   return (value as SwatchId[]).filter((id) => id in swatches).map((id) => swatches[id]);
 }
 
-export function chosenFlowerNames(answers: Answers, questionId: string): string[] {
+/** Their flowers in the order they picked them, skipping any no longer on the list. */
+export function chosenFlowers(answers: Answers, questionId: string): Flower[] {
   const value = answers[questionId];
 
   if (!Array.isArray(value)) {
@@ -71,15 +72,12 @@ export function chosenFlowerNames(answers: Answers, questionId: string): string[
   }
 
   return (value as string[])
-    .map((id) => flowers.find((flower) => flower.id === id)?.name)
-    .filter((name): name is string => name !== undefined);
+    .map((id) => flowers.find((flower) => flower.id === id))
+    .filter((flower): flower is Flower => flower !== undefined);
 }
 
-/** Their first-picked flower, or undefined when none was picked or its art is missing. */
-export function topFlower(answers: Answers, questionId: string): Flower | undefined {
-  const value = answers[questionId];
-  const first = Array.isArray(value) ? value[0] : undefined;
-  return flowers.find((flower) => flower.id === first && flower.id in flowerArt);
+export function chosenFlowerNames(answers: Answers, questionId: string): string[] {
+  return chosenFlowers(answers, questionId).map((flower) => flower.name);
 }
 
 /** The chosen picture's name, or undefined when skipped or when its art has since been removed. */

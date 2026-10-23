@@ -309,6 +309,7 @@ export const questions: readonly Question[] = [
       { value: 'maxmax', label: 'Maximum Maximalism' },
       { value: 'gallery', label: 'Art covering the walls' },
       { value: 'spotless', label: 'Spotless and uncluttered' },
+      { value: 'minimal', label: 'Bare minimum furniture' },
       { value: 'blanketFort', label: 'Blankets and cushions everywhere' },
     ],
   },
