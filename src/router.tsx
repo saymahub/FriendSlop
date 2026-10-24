@@ -7,6 +7,7 @@ import { Admin } from './routes/Admin';
 import { Credits } from './routes/Credits';
 import { GroupStats } from './routes/GroupStats';
 import { Landing } from './routes/Landing';
+import { MilliesCC } from './routes/MilliesCC';
 import { MyProfile } from './routes/MyProfile';
 import { NamePicker } from './routes/NamePicker';
 import { PeopleGrid } from './routes/PeopleGrid';
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
               </RequireVault>
             ),
           },
+          { path: '/cc', element: <RequireSubmitted>{<MilliesCC />}</RequireSubmitted> },
           { path: '/style-guide', element: <StyleGuide /> },
           { path: '/credits', element: <Credits /> },
         ],
@@ -96,6 +98,24 @@ function RequireMember({ children }: { children: ReactNode }) {
  * The submission gate. Step 3 moves it into Firestore rules, which is where it
  * becomes a real lock rather than a redirect.
  */
+/**
+ * Members who have handed their page in, and nobody else: stricter than the
+ * vault, which also lets guests and the admin look around.
+ */
+function RequireSubmitted({ children }: { children: ReactNode }) {
+  const { viewer } = useViewer();
+
+  if (viewer.kind === 'loading') {
+    return <Waiting />;
+  }
+
+  if (viewer.kind === 'member') {
+    return viewer.submitted ? <>{children}</> : <Navigate to="/me" replace />;
+  }
+
+  return <Navigate to="/" replace />;
+}
+
 function RequireVault({ children }: { children: ReactNode }) {
   const { viewer } = useViewer();
 

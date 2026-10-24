@@ -32,5 +32,11 @@ export function navItemsFor(viewer: Viewer): NavItem[] {
     return [...own, CREDITS];
   }
 
-  return [...own, { to: '/people', label: 'The gang' }, { to: '/stats', label: 'Group stats' }, CREDITS];
+  return [
+    ...own,
+    { to: '/people', label: 'The gang' },
+    { to: '/stats', label: 'Group stats' },
+    { to: '/cc', label: 'Millie\u2019s CC' },
+    CREDITS,
+  ];
 }

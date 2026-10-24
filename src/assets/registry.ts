@@ -8,6 +8,8 @@
  */
 
 import broLogo from './bro.png';
+import ccCoin from './cc/extras/coin.webp';
+import ccConfetti from './cc/extras/confetti.gif';
 
 /** Photographs and drawn art that are not stickers. */
 export const logos = {
@@ -53,6 +55,20 @@ export const tapes = byFileName(
   '.svg',
 );
 export const tapeNames = Object.keys(tapes).sort();
+
+/**
+ * Millie's CC art. Every WebP dropped into these folders is picked up; its file
+ * name is its id and, written out, its label ("iced-latte" reads "Iced Latte").
+ */
+/** One-off pieces of Millie's CC art, by name. The confetti stays a GIF: as WebP it was nearly three times larger. */
+export const ccExtras = { coin: ccCoin, confetti: ccConfetti } as const;
+
+export const ccArt = {
+  symbols: byFileName(import.meta.glob<string>('./cc/symbols/*.webp', { eager: true, import: 'default' })),
+  drinks: byFileName(import.meta.glob<string>('./cc/drinks/*.webp', { eager: true, import: 'default' })),
+  food: byFileName(import.meta.glob<string>('./cc/food/*.webp', { eager: true, import: 'default' })),
+  customers: byFileName(import.meta.glob<string>('./cc/customers/*.webp', { eager: true, import: 'default' })),
+} as const;
 
 export const textures = {
   paper: 'var(--texture-paper)',
