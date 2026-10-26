@@ -27,6 +27,13 @@ const FAVOURITE_WEIGHT = 3;
 const TEXT_QUESTIONS = ['foodsHated', 'comfortMeal', 'cafeOrder', 'alwaysYesRestaurant'] as const;
 const TEXT_MATCH_CAP = 2;
 
+/**
+ * Facts about someone rather than their taste. Sharing an allergy, a diet or a
+ * clothes size does not make two people alike, and everyone answering "none" to
+ * allergies would score as a perfect match.
+ */
+const NOT_COMPARED = new Set(['allergies', 'topSize']);
+
 /** `score` runs from 0 (nothing alike) to 1 (identical on everything shared). */
 export type Twin = { member: GroupMember; score: number };
 
@@ -46,6 +53,7 @@ export function rankTwins(me: GroupMember, group: readonly GroupMember[]): Twin[
  */
 function similarity(left: GroupMember, right: GroupMember): number | undefined {
   const scores = questions
+    .filter((question) => !NOT_COMPARED.has(question.id))
     .map((question) => agreement(question, answerOf(left, question), answerOf(right, question)))
     .filter((score): score is number => score !== undefined);
 
