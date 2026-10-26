@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { identityOf } from '@/lib/profileData';
 import { HandLabel, PaperCard } from '@/components/primitives';
 import { SafeArea } from '@/components/SafeArea';
 import { questionsInSection, questions, sections } from '@/config/questions';
@@ -64,12 +66,44 @@ function StatsBody({ group }: { group: GroupMember[] }) {
   );
 }
 
-/** Only a member has a page of their own to compare; the admin sees the rest. */
+/**
+ * A member sees their own twins. The admin has no page of their own, so they pick
+ * whose twins to look at instead.
+ */
 function Twins({ group }: { group: GroupMember[] }) {
   const { viewer } = useViewer();
-  const me = viewer.kind === 'member' ? group.find((member) => member.person.id === viewer.personId) : undefined;
 
+  if (viewer.kind === 'admin') {
+    return <AdminTwins group={group} />;
+  }
+
+  const me = viewer.kind === 'member' ? group.find((member) => member.person.id === viewer.personId) : undefined;
   return me ? <TwinBoard twins={rankTwins(me, group)} /> : null;
+}
+
+function AdminTwins({ group }: { group: GroupMember[] }) {
+  const [chosenId, setChosenId] = useState(group[0]?.person.id ?? '');
+  const chosen = group.find((member) => member.person.id === chosenId);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+        Twins as
+        <select
+          value={chosenId}
+          onChange={(event) => setChosenId(event.target.value)}
+          className="min-h-11 rounded-card border-2 border-paper-edge bg-paper px-2 text-base text-ink"
+        >
+          {group.map((member) => (
+            <option key={member.person.id} value={member.person.id}>
+              {identityOf(member.person).name}
+            </option>
+          ))}
+        </select>
+      </label>
+      {chosen && <TwinBoard twins={rankTwins(chosen, group)} />}
+    </div>
+  );
 }
 
 function Spreads({ group }: { group: GroupMember[] }) {

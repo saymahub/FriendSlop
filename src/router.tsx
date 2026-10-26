@@ -5,6 +5,7 @@ import { DevReset } from './components/shell/DevReset';
 import { EmulatorBadge } from './components/shell/EmulatorBadge';
 import { NowPlayingBar } from './components/shell/NowPlayingBar';
 import { Admin } from './routes/Admin';
+import { AdminEditAnswers } from './routes/AdminEditAnswers';
 import { Credits } from './routes/Credits';
 import { GroupStats } from './routes/GroupStats';
 import { Landing } from './routes/Landing';
@@ -48,6 +49,7 @@ export const router = createBrowserRouter([
           { path: '/cc', element: <RequireSubmitted>{<MilliesCC />}</RequireSubmitted> },
           { path: '/style-guide', element: <StyleGuide /> },
           { path: '/credits', element: <Credits /> },
+          { path: '/admin/edit/:personId', element: <RequireAdmin>{<AdminEditAnswers />}</RequireAdmin> },
         ],
       },
       { path: '*', element: <Navigate to="/" replace /> },
@@ -131,6 +133,17 @@ function RequireSubmitted({ children }: { children: ReactNode }) {
   }
 
   return <Navigate to="/" replace />;
+}
+
+/** The admin account only. The database checks this too; this only keeps others off the screen. */
+function RequireAdmin({ children }: { children: ReactNode }) {
+  const { viewer } = useViewer();
+
+  if (viewer.kind === 'loading') {
+    return <Waiting />;
+  }
+
+  return viewer.kind === 'admin' ? <>{children}</> : <Navigate to="/admin" replace />;
 }
 
 function RequireVault({ children }: { children: ReactNode }) {

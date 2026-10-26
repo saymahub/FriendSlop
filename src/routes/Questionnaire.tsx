@@ -1,4 +1,4 @@
-import { useBlocker, useNavigate } from 'react-router-dom';
+import { Link, useBlocker, useNavigate } from 'react-router-dom';
 import { Button, HandLabel, PaperCard, Stamp, Tape } from '@/components/primitives';
 import { QuestionField } from '@/components/questions/QuestionField';
 import { UnsavedChangesDialog } from '@/components/UnsavedChangesDialog';
@@ -18,12 +18,24 @@ export function Questionnaire() {
     throw new Error('Questionnaire rendered for a viewer who has not claimed a card');
   }
 
-  return <MemberForm personId={viewer.personId} submitted={viewer.submitted} onSubmit={markSubmitted} />;
+  return (
+    <AnswerEditor personId={viewer.personId} submitted={viewer.submitted} heading="Your page" onSubmit={markSubmitted} />
+  );
 }
 
-type MemberFormProps = { personId: string; submitted: boolean; onSubmit: () => Promise<void> };
+type AnswerEditorProps = {
+  personId: string;
+  submitted: boolean;
+  heading: string;
+  /**
+   * The member's own hand-in. Left out when the admin is editing someone's
+   * answers: the admin can save fixes, but submitting is the person's choice.
+   */
+  onSubmit?: () => Promise<void>;
+};
 
-function MemberForm({ personId, submitted, onSubmit }: MemberFormProps) {
+/** Every question for one person, with their saved answers, ready to change and save. */
+export function AnswerEditor({ personId, submitted, heading, onSubmit }: AnswerEditorProps) {
   const { answers, loading, error, setAnswer, save, discard, hasUnsavedChanges, saving } =
     useAnswers(personId);
   const card = useAsync(() => fetchPerson(personId), [personId]);
@@ -41,7 +53,7 @@ function MemberForm({ personId, submitted, onSubmit }: MemberFormProps) {
 
   const handIn = async () => {
     await save(true);
-    await onSubmit();
+    await onSubmit?.();
   };
 
   if (loading) {
@@ -52,7 +64,7 @@ function MemberForm({ personId, submitted, onSubmit }: MemberFormProps) {
     <div>
       <header className="mb-8 flex flex-col items-center text-center">
         <HandLabel as="h1" size="hero" face="title" className="block">
-          Your page
+          {heading}
         </HandLabel>
         <div className="mt-3">
           <ProgressBar answered={progress.answered} total={progress.total} />
@@ -79,13 +91,11 @@ function MemberForm({ personId, submitted, onSubmit }: MemberFormProps) {
         />
       ))}
 
-      <SubmitPanel
-        answers={answers}
-        submitted={submitted}
-        saving={saving}
-        onSubmit={handIn}
-        onSave={() => save(false)}
-      />
+      {onSubmit ? (
+        <SubmitPanel answers={answers} submitted={submitted} saving={saving} onSubmit={handIn} onSave={() => save(false)} />
+      ) : (
+        <AdminSavePanel saving={saving} onSave={() => save(false)} />
+      )}
 
       {blocker.state === 'blocked' && (
         <UnsavedChangesDialog
@@ -189,6 +199,26 @@ function ProgressBar({ answered, total }: { answered: number; total: number }) {
         {answered} of {total}
       </span>
     </div>
+  );
+}
+
+/** The admin's panel: save the fixes, without submitting anything on their behalf. */
+function AdminSavePanel({ saving, onSave }: { saving: boolean; onSave: () => void }) {
+  return (
+    <PaperCard className="text-center">
+      <p className="mb-4 text-sm text-ink-soft">
+        Saving changes their answers only. It does not submit their page or touch their PIN. If they have unsaved
+        edits on their own device, saving there will put their version back.
+      </p>
+      <div className="flex flex-wrap justify-center gap-2">
+        <Button variant="keep" onClick={onSave} disabled={saving}>
+          {saving ? 'Saving…' : 'Save changes'}
+        </Button>
+        <Link to="/admin" className="flex min-h-11 items-center px-3 text-sm underline">
+          Back to admin
+        </Link>
+      </div>
+    </PaperCard>
   );
 }
 

@@ -1,4 +1,5 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchPeople, resetPin, seedRoster, wipeEveryone, type PersonDoc } from '@/data/people';
 import {
   clearAllAnswers,
@@ -197,6 +198,7 @@ function SeedPanel() {
               <th className="py-2 pr-4">Claimed</th>
               <th className="py-2 pr-4">PIN version</th>
               <th className="py-2 pr-4">Submitted</th>
+              <th className="py-2 pr-4">Page</th>
               <th className="py-2">PIN</th>
             </tr>
           </thead>
@@ -208,6 +210,15 @@ function SeedPanel() {
                 <td className="py-2 pr-4">{person.claimedBy ? 'yes' : 'no'}</td>
                 <td className="py-2 pr-4">{person.claimVersion}</td>
                 <td className="py-2 pr-4">{person.submittedAt ? 'yes' : 'no'}</td>
+                <td className="py-2 pr-4 whitespace-nowrap">
+                  <Link to={`/people/${person.id}`} className="text-xs underline">
+                    View page
+                  </Link>
+                  <span className="px-1 text-slate-400">·</span>
+                  <Link to={`/admin/edit/${person.id}`} className="text-xs underline">
+                    Edit answers
+                  </Link>
+                </td>
                 <td className="py-2">
                   <button
                     type="button"
