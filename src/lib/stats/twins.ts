@@ -2,6 +2,9 @@ import { questions } from '@/config/questions';
 import type { AnswerValue, Question } from '@/config/questionTypes';
 import type { GroupMember } from '@/data/people';
 import { submittedSliderAnswer } from '@/lib/answerDisplay';
+import { textAnswer } from '@/lib/answerDisplay';
+import { sameFavourite } from './favourites';
+import { sharedItems } from './textMatch';
 import { isChoiceQuestion, picksOf } from './picks';
 
 /**
@@ -9,6 +12,20 @@ import { isChoiceQuestion, picksOf } from './picks';
  * left unscored rather than called twins on the strength of two answers.
  */
 const MINIMUM_SHARED_QUESTIONS = 5;
+
+/**
+ * A shared favourite (the same show, artist, anime, next trip...) counts as this
+ * many matching questions. Picking the same one out of thousands says far more
+ * than sharing a cake flavour; at one question's worth it would barely register.
+ */
+const FAVOURITE_WEIGHT = 3;
+
+/**
+ * Typed answers compared item by item. Each shared item counts as one matching
+ * question, up to a cap, so one long list of hates cannot outweigh everything.
+ */
+const TEXT_QUESTIONS = ['foodsHated', 'comfortMeal', 'cafeOrder', 'alwaysYesRestaurant'] as const;
+const TEXT_MATCH_CAP = 2;
 
 /** `score` runs from 0 (nothing alike) to 1 (identical on everything shared). */
 export type Twin = { member: GroupMember; score: number };
@@ -22,6 +39,11 @@ export function rankTwins(me: GroupMember, group: readonly GroupMember[]): Twin[
     .sort((left, right) => right.score - left.score);
 }
 
+/**
+ * The average agreement over every question both answered, plus a bonus for each
+ * favourite and typed answer they share. A difference there is not held against
+ * them: nearly everyone's differs, so it would pull every pair down alike.
+ */
 function similarity(left: GroupMember, right: GroupMember): number | undefined {
   const scores = questions
     .map((question) => agreement(question, answerOf(left, question), answerOf(right, question)))
@@ -31,7 +53,28 @@ function similarity(left: GroupMember, right: GroupMember): number | undefined {
     return undefined;
   }
 
-  return scores.reduce((sum, score) => sum + score, 0) / scores.length;
+  const bonus = favouriteBonus(left, right) + textBonus(left, right);
+
+  return (scores.reduce((sum, score) => sum + score, 0) + bonus) / (scores.length + bonus);
+}
+
+/** Each favourite they share counts as several matching questions. */
+function favouriteBonus(left: GroupMember, right: GroupMember): number {
+  const shared = questions.filter(
+    (question) =>
+      question.type === 'lookup' && sameFavourite(question, left.answers[question.id], right.answers[question.id]),
+  ).length;
+
+  return shared * FAVOURITE_WEIGHT;
+}
+
+/** Each item their typed answers share counts as one matching question, capped per question. */
+function textBonus(left: GroupMember, right: GroupMember): number {
+  return TEXT_QUESTIONS.reduce(
+    (total, id) =>
+      total + Math.min(TEXT_MATCH_CAP, sharedItems(textAnswer(left.answers, id), textAnswer(right.answers, id))),
+    0,
+  );
 }
 
 /** Everyone compared here has submitted, so an untouched slider counts as the middle. */
