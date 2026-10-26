@@ -1,4 +1,5 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
+import { SafeArea } from './components/SafeArea';
 import { AppShell } from './components/shell/AppShell';
 import { DevReset } from './components/shell/DevReset';
 import { EmulatorBadge } from './components/shell/EmulatorBadge';
@@ -58,10 +59,26 @@ function RootLayout() {
   return (
     <>
       <EmulatorBadge />
-      <Outlet />
-      <NowPlayingBar />
+      <SafeArea fallback={<PageCrashed />}>
+        <Outlet />
+      </SafeArea>
+      <SafeArea fallback={null}>
+        <NowPlayingBar />
+      </SafeArea>
       {import.meta.env.DEV && <DevReset />}
     </>
+  );
+}
+
+/** The last resort, if a crash gets past every smaller safety net on the page. */
+function PageCrashed() {
+  return (
+    <div className="px-4 py-16 text-center">
+      <p className="text-ink-soft">Something on this page went wrong.</p>
+      <a href="/" className="mt-3 inline-block min-h-11 py-2 text-sm underline">
+        Back to the start
+      </a>
+    </div>
   );
 }
 

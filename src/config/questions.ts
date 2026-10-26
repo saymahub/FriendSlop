@@ -46,6 +46,7 @@ export const questions: readonly Question[] = [
     label: 'Your emoji',
     help: 'Shows at the top of your page and on your card.',
     placeholder: '🌻',
+    singleEmoji: true,
     isOptional: true,
   },
   {

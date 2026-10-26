@@ -24,7 +24,7 @@ const readers: PickReaders = {
   multi: (question, value) => optionPicks(question.options, asList(value)),
   swatch: (question, value) => (question.variant === 'flower' ? flowerPicks(asList(value)) : swatchPicks(asList(value))),
   cutout: (question, value) =>
-    typeof value === 'string' && value in cutouts[question.set] ? [{ key: value, label: cutoutLabel(value) }] : [],
+    typeof value === 'string' && Object.hasOwn(cutouts[question.set], value) ? [{ key: value, label: cutoutLabel(value) }] : [],
 };
 
 export function isChoiceQuestion(question: Question): boolean {
@@ -65,7 +65,7 @@ function otherPick(entry: string): Pick {
 
 function swatchPicks(ids: string[]): Pick[] {
   return ids
-    .filter((id): id is SwatchId => id in swatches)
+    .filter((id): id is SwatchId => Object.hasOwn(swatches, id))
     .map((id) => ({ key: id, label: swatches[id].name, fill: swatches[id].base }));
 }
 

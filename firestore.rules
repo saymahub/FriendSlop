@@ -65,11 +65,16 @@ service cloud.firestore {
     }
 
     // An existing owner editing their own answers, without handing the card on.
+    // Only the answers and their timestamps may change: name, colour, emoji,
+    // order and the hidden flag are the admin's, so nobody can restyle their
+    // card into something that breaks the name grid for everyone.
     function isOwnEdit() {
       return isSignedIn()
         && resource.data.claimedBy == request.auth.uid
         && request.resource.data.claimedBy == request.auth.uid
-        && keepsVersion();
+        && keepsVersion()
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['answers', 'updatedAt', 'submittedAt']);
     }
 
     match /people/{personId} {

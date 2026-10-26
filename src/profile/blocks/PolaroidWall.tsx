@@ -25,7 +25,7 @@ const PICKS: readonly { questionId: string; caption: string; fill?: true }[] = [
 
 /** Favourites as tilted photo frames: the picture they picked, or the title they typed. */
 export function PolaroidWall({ profile }: BlockProps) {
-  const bouquet = chosenFlowers(profile.answers, 'flowers').filter((flower) => flower.id in flowerArt);
+  const bouquet = chosenFlowers(profile.answers, 'flowers').filter((flower) => Object.hasOwn(flowerArt, flower.id));
   const picks = PICKS.map((pick) => ({
     ...pick,
     value: textAnswer(profile.answers, pick.questionId),

@@ -28,6 +28,8 @@ export type TextQuestion = BaseQuestion & {
   /** A real example answer. Never starts with "e.g.". */
   readonly placeholder: string;
   readonly multiline?: boolean;
+  /** Takes exactly one emoji: anything else typed is dropped, and a new emoji replaces the old. */
+  readonly singleEmoji?: boolean;
 };
 
 export type ChoiceOption = { readonly value: string; readonly label: string };

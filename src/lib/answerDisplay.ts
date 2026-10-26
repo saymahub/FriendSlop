@@ -60,7 +60,7 @@ export function chosenSwatches(answers: Answers, questionId: string): SwatchTrip
     return [];
   }
 
-  return (value as SwatchId[]).filter((id) => id in swatches).map((id) => swatches[id]);
+  return (value as SwatchId[]).filter((id) => Object.hasOwn(swatches, id)).map((id) => swatches[id]);
 }
 
 /** Their flowers in the order they picked them, skipping any no longer on the list. */
@@ -83,7 +83,7 @@ export function chosenFlowerNames(answers: Answers, questionId: string): string[
 /** The chosen picture's name, or undefined when skipped or when its art has since been removed. */
 export function chosenCutout(answers: Answers, questionId: string, set: CutoutSet): string | undefined {
   const value = answers[questionId];
-  return typeof value === 'string' && value in cutouts[set] ? value : undefined;
+  return typeof value === 'string' && Object.hasOwn(cutouts[set], value) ? value : undefined;
 }
 
 /** "hello-kitty" becomes "Hello Kitty": these are names, so every word is capitalised. */

@@ -1,5 +1,6 @@
 import { fetchAnswers, fetchPerson, type PersonDoc } from '@/data/people';
 import { textAnswer } from '@/lib/answerDisplay';
+import { firstEmoji } from '@/lib/emoji';
 import { isComplete } from '@/lib/progress';
 import type { Answers } from '@/state/useAnswers';
 import type { Viewer } from '@/state/ViewerContext';
@@ -46,7 +47,9 @@ export async function loadProfile(personId: string): Promise<Profile | undefined
 export function identityOf(person: PersonDoc): { name: string; emoji: string } {
   return {
     name: textAnswer(person.answers, 'displayName') || person.name,
-    emoji: textAnswer(person.answers, 'favouriteEmoji') || person.emoji,
+    // Only ever one emoji, whatever was saved: a long or odd answer here would
+    // spill across the name grid and every profile header for everyone.
+    emoji: firstEmoji(textAnswer(person.answers, 'favouriteEmoji')) || person.emoji,
   };
 }
 

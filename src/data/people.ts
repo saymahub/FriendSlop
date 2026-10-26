@@ -14,6 +14,8 @@ import { roster } from '@/config/roster';
 import { loadRosterNames } from '@/config/rosterNames';
 import type { SwatchId } from '@/config/swatches';
 import type { Answers } from '@/state/useAnswers';
+import { swatches } from '@/config/swatches';
+import { cleanAnswers } from './answerShape';
 import { mergeAnswers, splitAnswers } from './answerSplit';
 
 /**
@@ -60,7 +62,7 @@ export async function fetchPerson(personId: string): Promise<PersonDoc | undefin
 export async function fetchPrivateAnswers(personId: string): Promise<Answers> {
   try {
     const snapshot = await getDoc(doc(db, PEOPLE, personId, ...PRIVATE_DOC));
-    return snapshot.exists() ? ((snapshot.data().answers ?? {}) as Answers) : {};
+    return snapshot.exists() ? cleanAnswers(snapshot.data().answers) : {};
   } catch {
     return {};
   }
@@ -172,17 +174,27 @@ export function resetPin(personId: string, claimVersion: number): Promise<void> 
   });
 }
 
+/**
+ * A card as read back, every field checked. People can write to their own card by
+ * going around the site, so a field of the wrong kind (a colour that is not a
+ * swatch, a name that is not text) falls back to a safe value instead of
+ * crashing the name grid or a profile for everyone.
+ */
 function toPerson(id: string, data: Record<string, unknown>): PersonDoc {
   return {
     id,
-    name: (data.name as string) ?? id,
-    colour: (data.colour as SwatchId) ?? 'stone',
-    emoji: (data.emoji as string) ?? '📎',
-    order: (data.order as number) ?? 0,
-    hidden: (data.hidden as boolean) ?? false,
-    claimedBy: (data.claimedBy as string | null) ?? null,
-    claimVersion: (data.claimVersion as number) ?? 1,
-    answers: (data.answers as Answers) ?? {},
-    submittedAt: (data.submittedAt as Timestamp | null) ?? null,
+    name: typeof data.name === 'string' ? data.name : id,
+    colour: typeof data.colour === 'string' && Object.hasOwn(swatches, data.colour) ? (data.colour as SwatchId) : 'stone',
+    emoji: typeof data.emoji === 'string' ? data.emoji : '📎',
+    order: typeof data.order === 'number' && Number.isFinite(data.order) ? data.order : 0,
+    hidden: data.hidden === true,
+    claimedBy: typeof data.claimedBy === 'string' ? data.claimedBy : null,
+    claimVersion: typeof data.claimVersion === 'number' && data.claimVersion >= 1 ? data.claimVersion : 1,
+    answers: cleanAnswers(data.answers),
+    submittedAt: isTimestamp(data.submittedAt) ? data.submittedAt : null,
   };
+}
+
+function isTimestamp(value: unknown): value is Timestamp {
+  return typeof value === 'object' && value !== null && typeof (value as Timestamp).toMillis === 'function';
 }

@@ -1,4 +1,5 @@
 import type { TextQuestion } from '@/config/questionTypes';
+import { lastEmoji } from '@/lib/emoji';
 import type { QuestionProps } from './types';
 
 /**
@@ -10,6 +11,18 @@ const FIELD =
 
 export function ScrapNote({ question, value, onChange }: QuestionProps<TextQuestion>) {
   const text = typeof value === 'string' ? value : '';
+
+  if (question.singleEmoji) {
+    return (
+      <input
+        type="text"
+        value={text}
+        placeholder={question.placeholder}
+        onChange={(event) => onChange(lastEmoji(event.target.value))}
+        className={`${FIELD} max-w-28 text-center text-2xl`}
+      />
+    );
+  }
 
   if (question.multiline) {
     return (

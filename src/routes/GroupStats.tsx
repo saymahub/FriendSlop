@@ -1,4 +1,5 @@
 import { HandLabel, PaperCard } from '@/components/primitives';
+import { SafeArea } from '@/components/SafeArea';
 import { questionsInSection, questions, sections } from '@/config/questions';
 import type { Section, SliderQuestion } from '@/config/questionTypes';
 import { fetchSubmittedGroup, type GroupMember } from '@/data/people';
@@ -48,10 +49,16 @@ function StatsBody({ group }: { group: GroupMember[] }) {
   return (
     <>
       <p className="-mt-6 text-center text-sm text-faded">From {group.length} submitted pages.</p>
-      <Twins group={group} />
-      <Spreads group={group} />
+      <SafeArea>
+        <Twins group={group} />
+      </SafeArea>
+      <SafeArea>
+        <Spreads group={group} />
+      </SafeArea>
       {sections.map((section) => (
-        <Favourites key={section.id} section={section} group={group} />
+        <SafeArea key={section.id}>
+          <Favourites section={section} group={group} />
+        </SafeArea>
       ))}
     </>
   );
