@@ -125,7 +125,7 @@ export function SlotMachine({ coins, onBet, onWin }: SlotMachineProps) {
       </Button>
 
       {coins < BETS[0] && !spinning && (
-        <p className="mt-2 text-center text-sm text-ink-soft">Out of coins. Serve some drinks below to earn more.</p>
+        <p className="mt-2 text-center text-sm text-ink-soft">Out of coins. Clock in below to earn more.</p>
       )}
     </PaperCard>
   );

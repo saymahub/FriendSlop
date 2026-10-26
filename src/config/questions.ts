@@ -253,7 +253,7 @@ export const questions: readonly Question[] = [
     section: 'colour',
     type: 'multi',
     label: 'Your top hobbies',
-    max: 5,
+    max: 10,
     allowOther: true,
     options: [
       { value: 'painting', label: 'Painting' },
@@ -269,6 +269,7 @@ export const questions: readonly Question[] = [
       { value: 'politics', label: 'Politics' },
       { value: 'cycling', label: 'Cycling' },
       { value: 'sports', label: 'Sports' },
+      { value: 'writing', label: 'Writing' },
       { value: 'workingOut', label: 'Working out' },
       { value: 'chess', label: 'Chess' },
       { value: 'crochet', label: 'Crochet' },
