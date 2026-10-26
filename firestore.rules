@@ -35,12 +35,24 @@ service cloud.firestore {
       return get(claimPath()).data;
     }
 
+    // The person document a claim points at. A claim is only a hint: the card
+    // itself must agree, or anyone could write a claim naming someone else.
+    function claimedCard() {
+      return get(/databases/$(database)/documents/people/$(claimData().personId)).data;
+    }
+
+    // Holds the card for real: its claimedBy is this account. A PIN reset clears
+    // claimedBy, so this also stops a session from before the reset.
+    function holdsClaimedCard() {
+      return hasClaim() && claimedCard().claimedBy == request.auth.uid;
+    }
+
     function hasSubmitted() {
-      return hasClaim() && claimData().submitted == true;
+      return holdsClaimedCard() && claimedCard().submittedAt != null;
     }
 
     function ownsPerson(id) {
-      return hasClaim() && claimData().personId == id;
+      return holdsClaimedCard() && claimData().personId == id;
     }
 
     function unclaimed() {
@@ -93,10 +105,27 @@ service cloud.firestore {
       }
     }
 
-    // The reverse index the rules above read. One per signed-in person.
+    // The reverse index the rules above read. One per signed-in person, and only
+    // ever pointing at a card that account really holds, saying "submitted" only
+    // once that card has been handed in. The app writes the card first, then this.
     match /claims/{uid} {
+      function newCard() {
+        return get(/databases/$(database)/documents/people/$(request.resource.data.personId)).data;
+      }
+
+      function isHonestClaim() {
+        return isSignedIn()
+          && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['personId', 'submitted'])
+          && request.resource.data.personId is string
+          && request.resource.data.submitted is bool
+          && exists(/databases/$(database)/documents/people/$(request.resource.data.personId))
+          && newCard().claimedBy == request.auth.uid
+          && (request.resource.data.submitted == false || newCard().submittedAt != null);
+      }
+
       allow read: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
-      allow create, update: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+      allow create, update: if isAdmin() || isHonestClaim();
       allow delete: if isAdmin();
     }
 
